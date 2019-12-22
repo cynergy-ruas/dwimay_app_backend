@@ -18,40 +18,46 @@ class _EventLoadExampleState extends State<EventLoadExample> {
         title: Text("Event Load Example"),
       ),
       body: Center(
-        // creating the [EventLoader] widget
-        child: EventLoader(
-          key: loaderKey,
+        // using a [Builder] widget so that snackbars can be 
+        // shown.
+        child: Builder(
+          builder: (BuildContext context) {
+            // creating the [EventLoader] widget
+            return EventLoader(
+              key: loaderKey,
 
-          // widget to display when the event loading has not begun.
-          onUninitialized: RaisedButton(
-            child: Text("Load events"),
-            onPressed: () => loaderKey.currentState.loadData(),
-          ),
+              // widget to display when the event loading has not begun.
+              onUninitialized: RaisedButton(
+                child: Text("Load events"),
+                onPressed: () => loaderKey.currentState.loadData(),
+              ),
 
-          // widget to display when the event loading is going on.
-          onLoading: CircularProgressIndicator(),
+              // widget to display when the event loading is going on.
+              onLoading: CircularProgressIndicator(),
 
-          // widget to display when the events are loaded.
-          onLoaded: (List<Event> events) {
-            return ListView.builder(
-              itemCount: events.length,
-              itemBuilder: (BuildContext context, int index) {
-                Event event = events[index];
-                return ListTile(
-                  title: Text(event.name),
-                  subtitle: Text(event.description),
+              // widget to display when the events are loaded.
+              onLoaded: (List<Event> events) {
+                return ListView.builder(
+                  itemCount: events.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    Event event = events[index];
+                    return ListTile(
+                      title: Text(event.name),
+                      subtitle: Text(event.description),
+                    );
+                  },
                 );
               },
+
+              onError: (Exception e) => Scaffold.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('${e.toString()}'),
+                  backgroundColor: Colors.red,
+                )
+              ),
             );
           },
-
-          onError: (Exception e) => Scaffold.of(context).showSnackBar(
-            SnackBar(
-              content: Text('${e.toString()}'),
-              backgroundColor: Colors.red,
-            )
-          ),
-        ),
+        )
       ),
     );
   }

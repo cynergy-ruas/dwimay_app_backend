@@ -6,9 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// Widget that loads and displays the events.
 class EventLoader extends StatefulWidget {
-  /// child widget.
-  final Widget child;
-
   /// callback to execute when exception occurs.
   final void Function(Exception) onError;
 
@@ -27,7 +24,7 @@ class EventLoader extends StatefulWidget {
   /// [loadData] method should be called externally.
   final bool beginLoad;
 
-  EventLoader({Key key, this.child, @required this.onUninitialized, @required this.onLoading, 
+  EventLoader({Key key, @required this.onUninitialized, @required this.onLoading, 
                 @required this.onLoaded, @required this.onError, this.beginLoad = false}) : super(key: key);
 
   @override

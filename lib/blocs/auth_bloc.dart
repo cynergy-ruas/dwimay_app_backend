@@ -64,10 +64,10 @@ class AuthLoading extends AuthState {
 
 /// The state when an error occurs while logging in
 class AuthError extends AuthState {
-  final String error;
+  final Exception exception;
   
-  AuthError({@required this.error});
-  String toString() => "AuthError { error: $error }";
+  AuthError({@required this.exception});
+  String toString() => "AuthError { error: ${exception.toString()} }";
 }
 
 // Defining the Bloc. Logic goes here
@@ -127,7 +127,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
       catch (e) {
         // error occured while logging in, yield [AuthError] state
-        yield AuthError(error: e.toString());
+        yield AuthError(exception: e);
         // yielding [AuthInvalid] state
         yield AuthInvalid();
       }

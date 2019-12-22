@@ -1,6 +1,5 @@
+import 'package:dwimay_backend/dwimay_backend.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:dwimay_backend/blocs/auth_bloc.dart';
 
 class LoginExample extends StatefulWidget {
   @override
@@ -8,15 +7,9 @@ class LoginExample extends StatefulWidget {
 }
 
 class _LoginExampleState extends State<LoginExample> {
-  /// the [AuthBloc]
-  final AuthBloc _authBloc = new AuthBloc();
-
-  @override
-  void initState() {
-    super.initState();
-    // dispatching app start event
-    _authBloc.add(AppStart());
-  }
+  /// Key to access the [LoginWidget]. Used to execute
+  /// login and logout
+  GlobalKey<LoginWidgetState> loginKey = GlobalKey<LoginWidgetState>();
 
   @override
   Widget build(BuildContext context) {
@@ -24,73 +17,47 @@ class _LoginExampleState extends State<LoginExample> {
       appBar: AppBar(
         title: Text("Login Example"),
       ),
-      // BlocProvider to provide the [AuthBloc] later in the widget tree
-      body: BlocProvider(
-        create: (BuildContext context) => _authBloc,
+      
+      // using a [Builder] widget so that snackbars can be 
+      // shown.
+      body: Builder(
+        builder: (BuildContext context) {
+          return LoginWidget(
+            key: loginKey,
 
-        // BlocListener listens for error states, as [SnackBar]
-        // can only be shown in a BlocListener, not BlocBuilder
-        child: BlocListener<AuthBloc, AuthState>(
-          bloc: _authBloc,
-          listener: (BuildContext context, AuthState state) {
-            // error has occured, showing snackbar
-            if (state is AuthError) {
-              Scaffold.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('${state.error}'),
-                  backgroundColor: Colors.red,
-                )
-              );
-              print(state.error);
-            }
-          },
+            // widget to display when the login screen is not loaded
+            onUninitialized: SplashScreen(),
 
-          // BlocBuilder for the other states
-          child: BlocBuilder<AuthBloc, AuthState>(
-            bloc: _authBloc,
-            builder: (BuildContext context, AuthState state) {
-              Widget child; 
-              // if the state is uninitalized, show splash screen
-              if (state is AuthUninitialized) {
-                child = SplashScreen();
-              }
+            // widget to display when the login process is on going
+            onLoading: LoadingWidget(),
 
-              // login form, if state is [AuthInvalid]
-              else if (state is AuthInvalid) {
-                child = Padding(
-                    padding: EdgeInsets.all(20),
-                    child: LoginPage()
-                  );
-              }
+            // widget to display when the login process was successful
+            onSuccess: HomePage(loginKey: loginKey,),
 
-              // authentication is valid, navigating to 
-              // home page
-              else if (state is AuthValid) {
-                child = HomePage(authBloc: _authBloc,);
-              }
+            // the login form
+            loginForm: LoginPage(loginKey: loginKey,),
 
-              // loading screen
-              else {
-                child = LoadingWidget();
-              }
-
-              return AnimatedSwitcher(
-                duration: Duration(milliseconds: 500),
-                child: child
-              );
-            },
-          ),
-        ),
+            // callback to execute when an error occurs during the 
+            // authentication process
+            onError: (Exception e) => Scaffold.of(context).showSnackBar(
+              SnackBar(
+                content: Text('${e.toString()}'),
+                backgroundColor: Colors.red,
+              )
+            ),
+          );
+        }
       ),
     );
   }
 }
 
 class HomePage extends StatelessWidget {
+  /// The key to access the [LoginWidget]. Used
+  /// for logging out.
+  final GlobalKey<LoginWidgetState> loginKey;
 
-  final AuthBloc authBloc;
-
-  HomePage({@required this.authBloc});
+  HomePage({@required this.loginKey});
 
   @override
   Widget build(BuildContext context) {
@@ -101,9 +68,7 @@ class HomePage extends StatelessWidget {
         SizedBox(height: 40,),
         RaisedButton(
           child: Text("Log out"),
-          onPressed: () {
-            authBloc.add(LogOut());
-          },
+          onPressed: () => loginKey.currentState.logout(),
         ),
       ],
     );
@@ -111,8 +76,13 @@ class HomePage extends StatelessWidget {
 }
 
 class LoginPage extends StatelessWidget {
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  /// The key to access the [LoginWidget]. Used
+  /// for logging in.
+  final GlobalKey<LoginWidgetState> loginKey;
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  LoginPage({@required this.loginKey});
 
   @override
   Widget build(BuildContext context) {
@@ -123,23 +93,18 @@ class LoginPage extends StatelessWidget {
         children: <Widget>[
           TextFormField(
             decoration: InputDecoration(labelText: 'username'),
-            controller: _usernameController,
+            controller: emailController,
           ),
           TextFormField(
             decoration: InputDecoration(labelText: 'password'),
-            controller: _passwordController,
+            controller: passwordController,
             obscureText: true,
           ),
           RaisedButton(
-            onPressed: () {
-              print(BlocProvider.of<AuthBloc>(context));
-              BlocProvider.of<AuthBloc>(context).add(
-                LogIn(
-                  email: _usernameController.text.trim(),
-                  password: _passwordController.text
-                )
-              );
-            },
+            onPressed: () => loginKey.currentState.login(
+              email: emailController.text,
+              password: passwordController.text
+            ),
             child: Text('Login'),
           ),
         ],
