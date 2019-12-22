@@ -2,9 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-////////////////////////////////////////////
-/// Defining the events
-////////////////////////////////////////////
+// Defining the events
 
 /// The base class for data load events
 abstract class DataLoadEvent extends Equatable {
@@ -17,9 +15,7 @@ class BeginDataLoad extends DataLoadEvent {
   String toString() => "BeginDataLoad";
 }
 
-////////////////////////////////////////////
-/// Defining the states
-////////////////////////////////////////////
+// Defining the states
 
 /// The base class for data load states
 abstract class DataLoadState extends Equatable {
@@ -52,9 +48,7 @@ class DataLoadComplete extends DataLoadState {
   String toString() => "DataLoadComplete";
 }
 
-////////////////////////////////////////////
-/// Defining the Bloc. Logic goes here
-////////////////////////////////////////////
+// Defining the Bloc. Logic goes here
 
 class DataLoadBloc extends Bloc<DataLoadEvent, DataLoadState>{
   

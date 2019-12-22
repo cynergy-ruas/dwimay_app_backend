@@ -2,9 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-////////////////////////////////////////////
-/// Defining the events
-////////////////////////////////////////////
+// Defining the events
 
 /// The base class for notification events
 abstract class NotificationEvent extends Equatable {
@@ -21,9 +19,7 @@ class NotificationReceived extends NotificationEvent {
   String toString() => "Notification Recieved";
 }
 
-////////////////////////////////////////////
-/// Defining the states
-////////////////////////////////////////////
+// Defining the states
 
 /// The base class for notification events
 abstract class NotificationState extends Equatable {
@@ -47,10 +43,7 @@ class ShowNotificationUI extends NotificationState {
   String toString() => "Showing notification UI";
 }
 
-
-////////////////////////////////////////////
-/// Defining the Bloc. Logic goes here
-////////////////////////////////////////////
+// Defining the Bloc. Logic goes here
 
 class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
 

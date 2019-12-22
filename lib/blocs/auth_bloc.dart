@@ -4,9 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:dwimay_backend/models/user_model.dart';
 
-////////////////////////////////////////////
-/// Defining the events
-////////////////////////////////////////////
+// Defining the events
 
 /// The base class for auth events
 abstract class AuthEvent extends Equatable {
@@ -36,9 +34,7 @@ class LogOut extends AuthEvent {
   String toString() => "User is logging out";
 }
 
-////////////////////////////////////////////
-/// Defining the states
-////////////////////////////////////////////
+// Defining the states
 
 /// The base class for auth states
 abstract class AuthState extends Equatable {}
@@ -74,9 +70,7 @@ class AuthError extends AuthState {
   String toString() => "AuthError { error: $error }";
 }
 
-////////////////////////////////////////////
-/// Defining the Bloc. Logic goes here
-////////////////////////////////////////////
+// Defining the Bloc. Logic goes here
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
