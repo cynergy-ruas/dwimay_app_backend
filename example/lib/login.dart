@@ -75,14 +75,21 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   /// The key to access the [LoginWidget]. Used
   /// for logging in.
   final GlobalKey<LoginWidgetState> loginKey;
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
 
   LoginPage({@required this.loginKey});
+
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  TextEditingController emailController = TextEditingController();
+
+  TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -91,17 +98,17 @@ class LoginPage extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          TextFormField(
+          TextField(
             decoration: InputDecoration(labelText: 'username'),
             controller: emailController,
           ),
-          TextFormField(
+          TextField(
             decoration: InputDecoration(labelText: 'password'),
             controller: passwordController,
             obscureText: true,
           ),
           RaisedButton(
-            onPressed: () => loginKey.currentState.login(
+            onPressed: () => widget.loginKey.currentState.login(
               email: emailController.text,
               password: passwordController.text
             ),
