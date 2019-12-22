@@ -91,4 +91,9 @@ class EventPool {
   static void addEvent(Event event) {
     EventPool.events.add(event);
   }
+
+  /// Clears all the [event]s in the list
+  static void clearEvents() {
+    EventPool.events = [];
+  }
 }

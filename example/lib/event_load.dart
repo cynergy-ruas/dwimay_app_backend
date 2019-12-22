@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:dwimay_backend/blocs/data_load_bloc.dart';
-import 'package:dwimay_backend/managers/event_manager.dart';
-import 'package:dwimay_backend/models/events_model.dart';
+import 'package:dwimay_backend/dwimay_backend.dart';
 
 class EventLoadExample extends StatefulWidget {
   @override
@@ -10,9 +7,9 @@ class EventLoadExample extends StatefulWidget {
 }
 
 class _EventLoadExampleState extends State<EventLoadExample> {
-
-  /// The [DataLoadBloc]
-  final DataLoadBloc _bloc = DataLoadBloc(manager: EventManager());
+  /// Global key for accessing the state of the [EventLoader].
+  /// Used to begin loading the events
+  final GlobalKey<EventLoaderState> loaderKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -21,66 +18,41 @@ class _EventLoadExampleState extends State<EventLoadExample> {
         title: Text("Event Load Example"),
       ),
       body: Center(
-        // BlocListener listens for error states, as [SnackBar]
-        // can only be shown in a BlocListener, not BlocBuilder
-        child: BlocListener<DataLoadBloc, DataLoadState>(
-          bloc: _bloc,
-          listener: (BuildContext context, DataLoadState state) {
-            if (state is DataLoadError) {
-              Scaffold.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('${state.error}'),
-                  backgroundColor: Colors.red,
-                )
-              );
-              print(state.error);
-            }
+        // creating the [EventLoader] widget
+        child: EventLoader(
+          key: loaderKey,
+
+          // widget to display when the event loading has not begun.
+          onUninitialized: RaisedButton(
+            child: Text("Load events"),
+            onPressed: () => loaderKey.currentState.loadData(),
+          ),
+
+          // widget to display when the event loading is going on.
+          onLoading: CircularProgressIndicator(),
+
+          // widget to display when the events are loaded.
+          onLoaded: (List<Event> events) {
+            return ListView.builder(
+              itemCount: events.length,
+              itemBuilder: (BuildContext context, int index) {
+                Event event = events[index];
+                return ListTile(
+                  title: Text(event.name),
+                  subtitle: Text(event.description),
+                );
+              },
+            );
           },
-          // BlocBuilder for the other states
-          child: BlocBuilder<DataLoadBloc, DataLoadState>(
-            bloc: _bloc,
-            builder: (BuildContext context, DataLoadState state) {
-              // if its the initial state of data load, show button to 
-              // load data
-              if (state is DataLoadUnintialized) {
-                return RaisedButton(
-                  child: Text("Load events"),
-                  onPressed: onPress,
-                );
-              }
 
-              // if the loading is in progress, show loading bar
-              else if (state is DataLoadOnGoing) {
-                return CircularProgressIndicator();
-              }
-
-              // if the data is loaded, list it
-              else {
-                return ListView.builder(
-                  itemCount: EventPool.events.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    Event event = EventPool.events[index];
-                    return ListTile(
-                      title: Text(event.name),
-                      subtitle: Text(event.description),
-                    );
-                  },
-                );
-              }
-            },
+          onError: (Exception e) => Scaffold.of(context).showSnackBar(
+            SnackBar(
+              content: Text('${e.toString()}'),
+              backgroundColor: Colors.red,
+            )
           ),
         ),
       ),
     );
-  }
-
-  void onPress() {
-    _bloc.add(BeginDataLoad());
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _bloc.close();
   }
 }

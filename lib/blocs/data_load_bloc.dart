@@ -40,10 +40,10 @@ class DataLoadOnGoing extends DataLoadState {
 
 /// The state when there is an error loading data
 class DataLoadError extends DataLoadState {
-  final String error;
-  DataLoadError({@required this.error}) : super();
+  final Exception exception;
+  DataLoadError({@required this.exception}) : super();
 
-  String toString() => "DataLoadError: $error";
+  String toString() => "DataLoadError: ${exception.toString()}";
 }
 
 /// The state when data loading is complete
@@ -80,7 +80,7 @@ class DataLoadBloc extends Bloc<DataLoadEvent, DataLoadState>{
         yield DataLoadComplete();
       } 
       catch (e) {
-        yield DataLoadError(error: e.toString());
+        yield DataLoadError(exception: e);
         yield initialState;
       }
     }

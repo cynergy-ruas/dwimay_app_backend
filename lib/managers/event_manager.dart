@@ -3,9 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dwimay_backend/models/events_model.dart';
 import 'package:dwimay_backend/services/database.dart';
 
+/// Loads the event data using the database API and stores it
+/// in the [EventPool]
 class EventManager {
-  /// Loads the event data using the database API and stores it
-  /// in the [EventPool]
 
   Future <void> loadData() async {
     // getting instance of database
@@ -13,6 +13,9 @@ class EventManager {
 
     // getting raw information about all events
     List<Map<String, dynamic>> data = await db.getAllEvents();
+
+    // clearing the events from the [EventPool]
+    EventPool.clearEvents();
 
     // creating events and updating [EventPool]
     for (int i = 0; i < data.length; i++) {
