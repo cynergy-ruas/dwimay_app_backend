@@ -1,6 +1,6 @@
 # Dwimay Backend
 
-Backend code for MS Ramaiah University of Applied Sciences's tech fest app.
+Backend flutter package for MS Ramaiah University of Applied Sciences's tech fest, Dwimay, app.
 To be used for the purpose of the Dwimay tech fest only.
 
 Made using flutter version 1.9.1+hotfix.6
