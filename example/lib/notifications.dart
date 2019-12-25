@@ -1,7 +1,5 @@
+import 'package:dwimay_backend/dwimay_backend.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:dwimay_backend/blocs/notification_bloc.dart';
-import 'package:dwimay_backend/services/notifications.dart';
 
 class NotificationsExample extends StatefulWidget {
   @override
@@ -9,58 +7,33 @@ class NotificationsExample extends StatefulWidget {
 }
 
 class _NotificationsExampleState extends State<NotificationsExample> {
-
-  FirebaseNotifications _notifications;
-
-  _NotificationsExampleState() {
-    // this line initializes the notifications and asks the required
-    // permissions from the user (for iOS)
-    this._notifications = FirebaseNotifications.instance;
-
-    // this line configures what should happen when a notification is 
-    // recieved during various scenarios like when the app is closed
-    // ([onLaunch]), when the app is in the background ([onResume])
-    // and when the app is in foreground ([onMessage])
-    this._notifications.configureCallbacks(
-      onLaunch: onLaunch,
-      onResume: onResume,
-      onMessage: onMessage
-    );
-  }
-
   List<Widget> pages;
   int currentPage;
 
   @override
   void initState() {
     super.initState();
-    pages = [page1(), page2()];
     currentPage = 0;
   }
 
   @override
   Widget build(BuildContext context) {
+    pages = [page1(context), page2()];
     return Scaffold(
       appBar: AppBar(
         title: Text("Notifications Test"),
       ),
 
-      // A [BlocListener] is used since a [Snackbar] has to be shown
-      // when a notification is recieved. When a notification is recieved,
-      // the notification service adds a [NotificationRecieved] event 
-      // to the [NotificationBloc]. The [NotificationBloc] recieves this
-      // event and emits a [ShowNotificationUI] state, which is used
-      // to show an appropriate UI to the user.
-      body: BlocListener<NotificationBloc, NotificationState>(
-        bloc: _notifications.notificationBloc,
-        listener: (BuildContext context, NotificationState state) {
-          if (state is ShowNotificationUI) {
-            Scaffold.of(context).showSnackBar(
-              SnackBar(
-                content: Text("notification recieved! ${state.message}"),
-              )
-            );
-          }
+      // Building the [NotificationProvider]
+      body: NotificationProvider(
+        // What to do when a notification arrives when the app is in foreground
+        onMessage: (BuildContext context, Map<String, dynamic> message) {
+          print("ONMESSAGE");
+          Scaffold.of(context).showSnackBar(
+            SnackBar(
+              content: Text(message.toString()),
+            )
+          );
         },
 
         // the rest of the app
@@ -88,7 +61,8 @@ class _NotificationsExampleState extends State<NotificationsExample> {
     );
   }
 
-  Widget page1() {
+  /// Random home page
+  Widget page1(BuildContext context) {
     return Builder(
       builder: (context) {
         return Row(
@@ -102,7 +76,7 @@ class _NotificationsExampleState extends State<NotificationsExample> {
                 RaisedButton(
                   child: Text("Subscribe to test event"),
                   onPressed: () {
-                    _notifications.subscribeToTopic("t12")
+                    NotificationProvider.of(context).subscribe(topic: "t12")
                     .then((value) => Scaffold.of(context).showSnackBar(
                       SnackBar(content: Text("Subscribed"),)
                     ));
@@ -112,7 +86,7 @@ class _NotificationsExampleState extends State<NotificationsExample> {
                 RaisedButton(
                   child: Text("Unsubscribe from test event"),
                   onPressed: () {
-                    _notifications.unsubscribeFromTopic("t12")
+                    NotificationProvider.of(context).unsubscribe(topic: "t12")
                     .then((value) => Scaffold.of(context).showSnackBar(
                       SnackBar(content: Text("Unsubscribed"),)
                     ));
@@ -130,29 +104,5 @@ class _NotificationsExampleState extends State<NotificationsExample> {
     return Center(
       child: Text("Profile"),
     );
-  }
-
-  /// Defines what should happen when a notification is recieved
-  /// when the app is in foreground
-  void onMessage({@required Map<String, dynamic> message}) {
-    setState(() {
-      currentPage = 0;
-    });
-  }
-
-  /// Defines what should happen when a notification is recieved
-  /// when the app is in background
-  void onResume({@required Map<String, dynamic> message}) {
-    setState(() {
-      currentPage = 0;
-    });
-  }
-
-  /// Defines what should happen when a notification is recieved 
-  /// when the app is not running.
-  void onLaunch({@required Map<String, dynamic> message}) {
-    setState(() {
-      currentPage = 0;
-    });
   }
 }
