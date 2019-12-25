@@ -27,8 +27,8 @@ class NotificationProvider extends StatefulWidget {
   @override
   _NotificationProviderState createState() => _NotificationProviderState();
 
-  /// Used to obtain the [FirebaseNotificationServices] object that is present
-  /// higher up in the widget tree. The [FirebaseNotificationServices]
+  /// Used to obtain the [FirebaseNotificationServices] object (an [InheritedWidget])
+  /// that is present higher up in the widget tree. The [FirebaseNotificationServices]
   /// object can be used to subscribe to events and unsubscribe from events.
   static FirebaseNotificationServices of(BuildContext context) => 
     context.inheritFromWidgetOfExactType(FirebaseNotificationServices);
@@ -45,7 +45,8 @@ class _NotificationProviderState extends State<NotificationProvider> {
     _bloc = NotificationBloc();
 
     // Configuring callbacks to execute when notification arrives
-    // and providing the bloc to use
+    // and providing the bloc to use when a notification arrives
+    // when the app is in foreground
     FirebaseNotificationSettings.instance.configure(
       bloc: _bloc,
       onResume: widget.onResume,
