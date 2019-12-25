@@ -28,7 +28,6 @@ class _NotificationsExampleState extends State<NotificationsExample> {
       body: NotificationProvider(
         // What to do when a notification arrives when the app is in foreground
         onMessage: (BuildContext context, Map<String, dynamic> message) {
-          print("ONMESSAGE");
           Scaffold.of(context).showSnackBar(
             SnackBar(
               content: Text(message.toString()),
