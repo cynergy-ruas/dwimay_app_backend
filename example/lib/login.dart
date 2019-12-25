@@ -20,33 +20,29 @@ class _LoginExampleState extends State<LoginExample> {
       
       // using a [Builder] widget so that snackbars can be 
       // shown.
-      body: Builder(
-        builder: (BuildContext context) {
-          return LoginWidget(
-            key: loginKey,
+      body: LoginWidget(
+        key: loginKey,
 
-            // widget to display when the login screen is not loaded
-            onUninitialized: SplashScreen(),
+        // widget to display when the login screen is not loaded
+        onUninitialized: SplashScreen(),
 
-            // widget to display when the login process is on going
-            onLoading: LoadingWidget(),
+        // widget to display when the login process is on going
+        onLoading: LoadingWidget(),
 
-            // widget to display when the login process was successful
-            onSuccess: HomePage(loginKey: loginKey,),
+        // widget to display when the login process was successful
+        onSuccess: HomePage(loginKey: loginKey,),
 
-            // the login form
-            loginForm: LoginPage(loginKey: loginKey,),
+        // the login form
+        loginForm: LoginPage(loginKey: loginKey,),
 
-            // callback to execute when an error occurs during the 
-            // authentication process
-            onError: (Exception e) => Scaffold.of(context).showSnackBar(
-              SnackBar(
-                content: Text('${e.toString()}'),
-                backgroundColor: Colors.red,
-              )
-            ),
-          );
-        }
+        // callback to execute when an error occurs during the 
+        // authentication process
+        onError: (BuildContext context, Exception e) => Scaffold.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${e.toString()}'),
+            backgroundColor: Colors.red,
+          )
+        ),
       ),
     );
   }

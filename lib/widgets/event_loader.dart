@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 /// Widget that loads and displays the events.
 class EventLoader extends StatefulWidget {
   /// callback to execute when exception occurs.
-  final void Function(Exception) onError;
+  final void Function(BuildContext, Exception) onError;
 
   /// Widget to display when the data is loading
   final Widget onLoading;
@@ -16,7 +16,9 @@ class EventLoader extends StatefulWidget {
   final Widget onUninitialized;
 
   /// Function that returns the widget to display when
-  /// the data is loaded.
+  /// the data is loaded. The [List<Event>] provided as an 
+  /// argument is empty if the client (phone) is not 
+  /// connected to the internet.
   final Widget Function(List<Event>) onLoaded;
 
   /// Specifies whether to begin loading the data
@@ -39,7 +41,7 @@ class EventLoaderState extends State<EventLoader> {
   Widget get onUninitialized => widget.onUninitialized;
   Widget get onLoading => widget.onLoading;
   Widget Function(List<Event>) get onLoaded => widget.onLoaded;
-  void Function(Exception) get onError => widget.onError;
+  void Function(BuildContext, Exception) get onError => widget.onError;
 
   @override
   void initState() {
@@ -59,7 +61,7 @@ class EventLoaderState extends State<EventLoader> {
         // if there is an error,
         if (state is DataLoadError)
           // execute [onError] callback
-          onError(state.exception);
+          onError(context, state.exception);
       },
 
       child: BlocBuilder<DataLoadBloc, DataLoadState> (

@@ -21,7 +21,7 @@ class LoginWidget extends StatefulWidget {
   final Widget loginForm;
 
   /// Callback to execute when login error occurs.
-  final void Function(Exception) onError;
+  final void Function(BuildContext, Exception) onError;
 
   LoginWidget({Key key, @required this.onUninitialized, @required this.loginForm, @required this.onLoading,
                @required this.onSuccess, @required this.onError})
@@ -38,7 +38,7 @@ class LoginWidgetState extends State<LoginWidget> {
   Widget get onLoading => widget.onLoading;
   Widget get onSuccess => widget.onSuccess;
   Widget get loginForm => widget.loginForm;
-  void Function(Exception) get onError => widget.onError;
+  void Function(BuildContext, Exception) get onError => widget.onError;
 
   /// The [AuthBloc]
   final AuthBloc _bloc = AuthBloc();
@@ -59,7 +59,7 @@ class LoginWidgetState extends State<LoginWidget> {
         // if there is an error,
         if (state is AuthError)
           // execute [onError] callback
-          onError(state.exception);
+          onError(context, state.exception);
       },
 
       child: BlocBuilder<AuthBloc, AuthState>(
@@ -77,10 +77,7 @@ class LoginWidgetState extends State<LoginWidget> {
 
           // [loginForm], if state is [AuthInvalid]
           else if (state is AuthInvalid) {
-            child = Padding(
-                padding: EdgeInsets.all(20),
-                child: loginForm
-              );
+            child = loginForm;
           }
 
           // authentication is valid, navigating to 
