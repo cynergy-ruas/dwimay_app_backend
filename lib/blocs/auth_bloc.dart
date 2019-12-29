@@ -120,7 +120,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
         // setting claims
         User.instance.setClaims(await _auth.getClaims());
-        print("User has logged in.");
 
         // yield [AuthValid] state
         yield AuthValid();

@@ -47,7 +47,7 @@ class FirebaseNotificationSettings {
     // listening for confirmation
     _messaging.onIosSettingsRegistered
         .listen((IosNotificationSettings settings) {
-      print("Settings registered: $settings");
+      print("iOS notification settings registered: $settings");
     });
   }
 

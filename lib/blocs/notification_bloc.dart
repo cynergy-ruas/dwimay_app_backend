@@ -16,7 +16,7 @@ class NotificationReceived extends NotificationEvent {
   NotificationReceived({@required this.message});
 
   @override
-  String toString() => "Notification Recieved";
+  String toString() => "Notification Received";
 }
 
 // Defining the states
