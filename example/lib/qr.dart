@@ -1,7 +1,5 @@
-import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:qr_flutter/qr_flutter.dart';
+import 'package:dwimay_backend/dwimay_backend.dart';
 
 class QrExample extends StatefulWidget {
   @override
@@ -11,7 +9,6 @@ class QrExample extends StatefulWidget {
 class _QrExampleState extends State<QrExample> {
 
   String text = "";
-  String scannedText = "";
 
   @override
   Widget build(BuildContext context) {
@@ -37,11 +34,14 @@ class _QrExampleState extends State<QrExample> {
                     },
                   ),
                   SizedBox(width: 20,),
-                  RaisedButton(
-                    child: Text("Scan QR code"),
-                    onPressed: () {
-                      scan();
-                    },
+                  QrScanner(
+                    child: RaisedButton(
+                      child: Text("Scan QR code"),
+                      onPressed: () async {
+                        this.text = await QrScanner.scan();
+                        setState(() {});
+                      },
+                    ),
                   )
                 ],
               ),
@@ -53,42 +53,11 @@ class _QrExampleState extends State<QrExample> {
                 gapless: true,
               ),
               SizedBox(height: 40,),
-              Text(scannedText)
+              Text(text)
             ],
           )
         ],
       ),
     );
-  }
-
-  Future<void> scan() async {
-    try {
-      String scanRes = await BarcodeScanner.scan();
-      setState(() {
-        this.scannedText = scanRes;
-        this.text = scanRes;
-      });
-    } 
-    on PlatformException catch (e) {
-      if (e.code == BarcodeScanner.CameraAccessDenied) 
-        setState(() {
-          this.scannedText = 'The user did not grant the camera permission!';
-        });
-
-      else 
-        setState(() {
-          this.scannedText = 'Unknown error: $e';
-        });
-    } 
-    on FormatException{
-      setState(() {
-        this.scannedText = 'back button was pressed before scan was completed';
-      });
-    } 
-    catch (e) {
-      setState(() {
-        this.scannedText = 'Unknown error: $e';
-      });
-    }
   }
 }
