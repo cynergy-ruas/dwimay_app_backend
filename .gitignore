@@ -74,3 +74,4 @@ build/
 
 # google services file
 google-services.json
+example/.flutter-plugins-dependencies

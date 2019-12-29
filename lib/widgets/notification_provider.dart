@@ -31,7 +31,7 @@ class NotificationProvider extends StatefulWidget {
   /// that is present higher up in the widget tree. The [FirebaseNotificationServices]
   /// object can be used to subscribe to events and unsubscribe from events.
   static FirebaseNotificationServices of(BuildContext context) => 
-    context.inheritFromWidgetOfExactType(FirebaseNotificationServices);
+    context.dependOnInheritedWidgetOfExactType(aspect: FirebaseNotificationServices);
 }
 
 class _NotificationProviderState extends State<NotificationProvider> {
