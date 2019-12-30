@@ -40,6 +40,7 @@ class Event {
     @required this.speaker,
     @required this.type,
     @required this.venue,
+    this.documentID
   });
 
 

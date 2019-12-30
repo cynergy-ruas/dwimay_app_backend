@@ -19,6 +19,11 @@ class EventManager {
 
     // creating events and updating [EventPool]
     for (int i = 0; i < data.length; i++) {
+      // skipping the template document present
+      // in the database
+      if (data[i]["docRef"] == "template")
+        continue;
+
       EventPool.addEvent(Event(
         datetime: data[i]["datetime"],
         department: data[i]["department"],
@@ -27,7 +32,8 @@ class EventManager {
         name: data[i]["name"],
         speaker: data[i]["speaker"],
         type: data[i]["type"],
-        venue: data[i]["venue"]
+        venue: data[i]["venue"],
+        documentID: data[i]["docRef"]
       ));
     }
   }
