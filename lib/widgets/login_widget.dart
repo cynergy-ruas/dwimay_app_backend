@@ -23,7 +23,7 @@ class LoginWidget extends StatefulWidget {
   /// Callback to execute when login error occurs.
   final void Function(BuildContext, Exception) onError;
 
-  LoginWidget({Key key, @required this.onUninitialized, @required this.loginForm, @required this.onLoading,
+  LoginWidget({Key key, this.onUninitialized, @required this.loginForm, @required this.onLoading,
                @required this.onSuccess, @required this.onError})
   : super(key: key);
 
@@ -72,7 +72,7 @@ class LoginWidgetState extends State<LoginWidget> {
           // if the state is uninitalized, show [onUninitialized]
           // (typically splash screen)
           if (state is AuthUninitialized) {
-            child = onUninitialized;
+            child = onUninitialized ?? Container();
           }
 
           // [loginForm], if state is [AuthInvalid]
