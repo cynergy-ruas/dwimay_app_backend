@@ -98,3 +98,12 @@ class EventPool {
     EventPool.events = [];
   }
 }
+
+class Department {
+  static const String AerospaceAndAutomotive = "ASE";
+  static const String ComputerScience = "CSE";
+  static const String ElectricAndElectronics = "ECE";
+  static const String Design = "DS";
+  static const String Mechanical = "ME";
+  static const String All = "All";
+}
