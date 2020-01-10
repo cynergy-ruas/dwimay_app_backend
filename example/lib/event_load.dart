@@ -19,10 +19,7 @@ class _EventLoadExampleState extends State<EventLoadExample> {
         child: EventLoader(
 
           // widget to display when the event loading has not begun.
-          onUninitialized: RaisedButton(
-            child: Text("Load events"),
-            onPressed: () => EventLoader.of(context).loadData(),
-          ),
+          onUninitialized: LoadButton(),
 
           // widget to display when the event loading is going on.
           onLoading: CircularProgressIndicator(),
@@ -49,6 +46,19 @@ class _EventLoadExampleState extends State<EventLoadExample> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class LoadButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return RaisedButton(
+      child: Text("Load events"),
+      onPressed: () { 
+        print(EventLoader.of(context));
+        EventLoader.of(context).loadData();
+      },
     );
   }
 }

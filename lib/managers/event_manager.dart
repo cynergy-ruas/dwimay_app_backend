@@ -25,7 +25,7 @@ class EventManager {
         continue;
 
       EventPool.addEvent(Event(
-        datetimes: data[i]["datetimes"],
+        datetimes: data[i]["datetimes"].cast<Timestamp>(),
         department: data[i]["department"],
         description: data[i]["description"],
         id: data[i]["id"],
