@@ -41,7 +41,7 @@ class Database {
 
     // updating data
     await doc.updateData({
-      "datetimes": event.datetimes,
+      "datetimes": event.datetimes.map((date) => Timestamp.fromDate(date)).toList(),
       "department": event.department,
       "description": event.description,
       "name": event.name,
