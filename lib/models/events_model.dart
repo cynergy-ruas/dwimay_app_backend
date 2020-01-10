@@ -48,24 +48,25 @@ class Event {
     return "Event[Name: $name]";
   }
 
-  /// Formats [datetime]. Example: "Tuesday, March 26, 2019"
-  String getLongDate(){
-    return DateFormat.yMMMMEEEEd().format(datetime.toDate());
-  }
-
-  /// Formats [datetime]. Example: "26th March, 2019"
-  String getShortDate() {
+  /// Formats [datetime]. Example: 
+  /// "26th March, 2019", if [requireYear] is true,
+  /// "Tuesday, 26th March" if [requireDay] is true,
+  /// "Tuesday, 26th March, 2019" if [requireYear] and [requireDay]
+  /// both are true.
+  String formatDate({bool requireYear = false, bool requireDay = false}) {
     DateTime _date = this.datetime.toDate();
     
-    String day = DateFormat.d().format(_date);
-    String daySuffix = "th";
-    if (day.endsWith("1")) daySuffix = "st";
-    else if (day.endsWith("2")) daySuffix = "nd";
-    else if (day.endsWith("3")) daySuffix = "rd";
+    String date = DateFormat.d().format(_date);
+    String dateSuffix = "th";
+    if (date.endsWith("1")) dateSuffix = "st";
+    else if (date.endsWith("2")) dateSuffix = "nd";
+    else if (date.endsWith("3")) dateSuffix = "rd";
 
-    return day + daySuffix + " " + 
-           DateFormat.MMMM().format(_date) + ", " +
-           DateFormat.y().format(_date); 
+    return ((requireDay) ?
+           DateFormat.EEEE().format(_date) + ", " : "") + 
+           date + dateSuffix + " " + 
+           DateFormat.MMMM().format(_date) + 
+           ((requireYear) ? ", " + DateFormat.y().format(_date) : ""); 
   }
 
   /// Formats [datetime]. Example 2:00 pm
