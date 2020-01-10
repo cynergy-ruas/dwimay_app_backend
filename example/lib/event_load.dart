@@ -7,10 +7,6 @@ class EventLoadExample extends StatefulWidget {
 }
 
 class _EventLoadExampleState extends State<EventLoadExample> {
-  /// Global key for accessing the state of the [EventLoader].
-  /// Used to begin loading the events
-  final GlobalKey<EventLoaderState> loaderKey = GlobalKey();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,12 +17,11 @@ class _EventLoadExampleState extends State<EventLoadExample> {
         // using a [Builder] widget so that snackbars can be 
         // shown.
         child: EventLoader(
-          key: loaderKey,
 
           // widget to display when the event loading has not begun.
           onUninitialized: RaisedButton(
             child: Text("Load events"),
-            onPressed: () => loaderKey.currentState.loadData(),
+            onPressed: () => EventLoader.of(context).loadData(),
           ),
 
           // widget to display when the event loading is going on.

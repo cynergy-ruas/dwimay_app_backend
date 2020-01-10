@@ -30,10 +30,10 @@ class _LoginExampleState extends State<LoginExample> {
         onLoading: LoadingWidget(),
 
         // widget to display when the login process was successful
-        onSuccess: HomePage(loginKey: loginKey,),
+        onSuccess: HomePage(),
 
         // the login form
-        loginForm: LoginPage(loginKey: loginKey,),
+        loginForm: LoginPage(),
 
         // callback to execute when an error occurs during the 
         // authentication process
@@ -49,12 +49,6 @@ class _LoginExampleState extends State<LoginExample> {
 }
 
 class HomePage extends StatelessWidget {
-  /// The key to access the [LoginWidget]. Used
-  /// for logging out.
-  final GlobalKey<LoginWidgetState> loginKey;
-
-  HomePage({@required this.loginKey});
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -64,7 +58,7 @@ class HomePage extends StatelessWidget {
         SizedBox(height: 40,),
         RaisedButton(
           child: Text("Log out"),
-          onPressed: () => loginKey.currentState.logout(),
+          onPressed: () => LoginWidget.of(context).logout(),
         ),
       ],
     );
@@ -72,12 +66,6 @@ class HomePage extends StatelessWidget {
 }
 
 class LoginPage extends StatefulWidget {
-  /// The key to access the [LoginWidget]. Used
-  /// for logging in.
-  final GlobalKey<LoginWidgetState> loginKey;
-
-  LoginPage({@required this.loginKey});
-
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -104,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
             obscureText: true,
           ),
           RaisedButton(
-            onPressed: () => widget.loginKey.currentState.login(
+            onPressed: () => LoginWidget.of(context).login(
               email: emailController.text,
               password: passwordController.text
             ),

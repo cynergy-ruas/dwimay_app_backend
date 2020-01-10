@@ -31,6 +31,9 @@ class EventLoader extends StatefulWidget {
 
   @override
   EventLoaderState createState() => EventLoaderState();
+
+  static EventLoaderActions of(BuildContext context) => 
+    context.dependOnInheritedWidgetOfExactType(aspect: EventLoaderActions);
 }
 
 class EventLoaderState extends State<EventLoader> {
@@ -53,40 +56,39 @@ class EventLoaderState extends State<EventLoader> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<DataLoadBloc, DataLoadState> (
+    return EventLoaderActions(
       bloc: _bloc,
-
-      // listening for errors.
-      listener: (BuildContext context, DataLoadState state) {
-        // if there is an error,
-        if (state is DataLoadError)
-          // execute [onError] callback
-          onError(context, state.exception);
-      },
-
-      child: BlocBuilder<DataLoadBloc, DataLoadState> (
+      child: BlocListener<DataLoadBloc, DataLoadState> (
         bloc: _bloc,
 
-        // building widget based on other states
-        builder: (BuildContext context, DataLoadState state) {
-          // if the data load is not started,
-          if (state is DataLoadUnintialized)
-            return onUninitialized;
-          
-          // if the data is loading,
-          if (state is DataLoadOnGoing)
-            return onLoading;
-
-          // if the data is loaded,
-          else
-            return onLoaded(EventPool.events);
+        // listening for errors.
+        listener: (BuildContext context, DataLoadState state) {
+          // if there is an error,
+          if (state is DataLoadError)
+            // execute [onError] callback
+            onError(context, state.exception);
         },
+
+        child: BlocBuilder<DataLoadBloc, DataLoadState> (
+          bloc: _bloc,
+
+          // building widget based on other states
+          builder: (BuildContext context, DataLoadState state) {
+            // if the data load is not started,
+            if (state is DataLoadUnintialized)
+              return onUninitialized;
+            
+            // if the data is loading,
+            if (state is DataLoadOnGoing)
+              return onLoading;
+
+            // if the data is loaded,
+            else
+              return onLoaded(EventPool.events);
+          },
+        ),
       ),
     );
-  }
-
-  void loadData() {
-    _bloc.add(BeginDataLoad());
   }
 
   @override
@@ -94,4 +96,19 @@ class EventLoaderState extends State<EventLoader> {
     super.dispose();
     _bloc.close();
   }
+}
+
+/// Actions the [EventLoader] can perform, which includes
+/// beginning data load.
+class EventLoaderActions extends InheritedWidget {
+
+  final DataLoadBloc bloc;
+
+  EventLoaderActions({Key key, @required this.bloc, Widget child})
+    : super(key: key, child: child);
+
+  void loadData() => bloc.add(BeginDataLoad());
+
+  @override
+  bool updateShouldNotify(InheritedWidget oldWidget) => false;
 }

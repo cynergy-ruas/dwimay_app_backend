@@ -29,6 +29,9 @@ class LoginWidget extends StatefulWidget {
 
   @override
   LoginWidgetState createState() => LoginWidgetState();
+
+  static LoginActions of(BuildContext context) => 
+    context.dependOnInheritedWidgetOfExactType(aspect: LoginActions);
 }
 
 class LoginWidgetState extends State<LoginWidget> {
@@ -51,64 +54,56 @@ class LoginWidgetState extends State<LoginWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthBloc, AuthState>(
+    return LoginActions(
       bloc: _bloc,
-
-      // listening for errors.
-      listener: (BuildContext context, AuthState state) {
-        // if there is an error,
-        if (state is AuthError)
-          // execute [onError] callback
-          onError(context, state.exception);
-      },
-
-      child: BlocBuilder<AuthBloc, AuthState>(
+      child: BlocListener<AuthBloc, AuthState>(
         bloc: _bloc,
 
-        // building UI based on state
-        builder: (BuildContext context, AuthState state) {
-          Widget child;
-
-          // if the state is uninitalized, show [onUninitialized]
-          // (typically splash screen)
-          if (state is AuthUninitialized) {
-            child = onUninitialized ?? Container();
-          }
-
-          // [loginForm], if state is [AuthInvalid]
-          else if (state is AuthInvalid) {
-            child = loginForm;
-          }
-
-          // authentication is valid, navigating to 
-          // [onSuccess] widget
-          else if (state is AuthValid) {
-            child = onSuccess;
-          }
-
-          // loading screen
-          else {
-            child = onLoading;
-          }
-
-          return AnimatedSwitcher(
-            duration: Duration(milliseconds: 500),
-            child: child
-          );
+        // listening for errors.
+        listener: (BuildContext context, AuthState state) {
+          // if there is an error,
+          if (state is AuthError)
+            // execute [onError] callback
+            onError(context, state.exception);
         },
+
+        child: BlocBuilder<AuthBloc, AuthState>(
+          bloc: _bloc,
+
+          // building UI based on state
+          builder: (BuildContext context, AuthState state) {
+            Widget child;
+
+            // if the state is uninitalized, show [onUninitialized]
+            // (typically splash screen)
+            if (state is AuthUninitialized) {
+              child = onUninitialized ?? Container();
+            }
+
+            // [loginForm], if state is [AuthInvalid]
+            else if (state is AuthInvalid) {
+              child = loginForm;
+            }
+
+            // authentication is valid, navigating to 
+            // [onSuccess] widget
+            else if (state is AuthValid) {
+              child = onSuccess;
+            }
+
+            // loading screen
+            else {
+              child = onLoading;
+            }
+
+            return AnimatedSwitcher(
+              duration: Duration(milliseconds: 500),
+              child: child
+            );
+          },
+        ),
       ),
     );
-  }
-
-  void logout() {
-    _bloc.add(LogOut());
-  }
-
-  void login({@required String email, @required String password}) {
-    _bloc.add(LogIn(
-      email: email,
-      password: password
-    ));
   }
 
   @override
@@ -116,4 +111,30 @@ class LoginWidgetState extends State<LoginWidget> {
     super.dispose();
     _bloc.close();
   }
+}
+
+/// The actions that the [LoginWidget] can perform, 
+/// which includes [login] and [logout]
+class LoginActions extends InheritedWidget {
+
+  final AuthBloc bloc;
+
+  LoginActions({Key key, @required this.bloc, Widget child})
+    : super(key: key, child: child); 
+
+  /// logs the user out
+  void logout() {
+    bloc.add(LogOut());
+  }
+
+  /// logs the user in
+  void login({@required String email, @required String password}) {
+    bloc.add(LogIn(
+      email: email,
+      password: password
+    ));
+  }
+
+  @override
+  bool updateShouldNotify(InheritedWidget oldWidget) => false;
 }
