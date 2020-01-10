@@ -1,5 +1,4 @@
 import 'package:meta/meta.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dwimay_backend/models/events_model.dart';
 import 'package:dwimay_backend/services/database.dart';
 
@@ -17,6 +16,9 @@ class EventManager {
     // clearing the events from the [EventPool]
     EventPool.clearEvents();
 
+    // creating variable to store datetimes
+    List<DateTime> datetimes;
+
     // creating events and updating [EventPool]
     for (int i = 0; i < data.length; i++) {
       // skipping the template document present
@@ -24,8 +26,17 @@ class EventManager {
       if (data[i]["docRef"] == "template")
         continue;
 
+      datetimes = data[i]["datetimes"].map((timestamp) => timestamp.toDate()).toList().cast<DateTime>();
+
+      // checking the smallest date in the dates of all the events
+      // to get the start day of the fest
+      datetimes.forEach((date) {
+        if (Event.festFirstDay == null || Event.festFirstDay.isAfter(date))
+          Event.festFirstDay = date;
+      });
+
       EventPool.addEvent(Event(
-        datetimes: data[i]["datetimes"].cast<Timestamp>(),
+        datetimes: datetimes,
         department: data[i]["department"],
         description: data[i]["description"],
         id: data[i]["id"],
@@ -44,8 +55,8 @@ class EventManager {
       
     // modifying event object if the given parameter is not null
     // and if its not same as the old one.
-    if (datetimes != null && event.datetimes != datetimes.map((date) => Timestamp.fromDate(date)).toList())
-      event.datetimes = datetimes.map((date) => Timestamp.fromDate(date)).toList();
+    if (datetimes != null && event.datetimes != datetimes)
+      event.datetimes = datetimes;
     if (department != null && event.department != department)
       event.department = department;
     if (description != null && event.description != description)

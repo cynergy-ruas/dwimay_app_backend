@@ -26,6 +26,8 @@ class _EventLoadExampleState extends State<EventLoadExample> {
 
           // widget to display when the events are loaded.
           onLoaded: (List<Event> events) {
+            events = EventPool.getEventsOfDay(day: 3, events: events);
+            print(events);
             return ListView.builder(
               itemCount: events.length,
               itemBuilder: (BuildContext context, int index) {

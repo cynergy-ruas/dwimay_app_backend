@@ -1,10 +1,12 @@
 import 'package:meta/meta.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
 class Event {
+  /// variable to store the first day of the fest
+  static DateTime festFirstDay;
+
   /// Date and time of the event.
-  List<Timestamp> datetimes;
+  List<DateTime> datetimes;
 
   /// The department conducting the event.
   String department;
@@ -54,7 +56,7 @@ class Event {
   /// "Tuesday, 26th March, 2019" if [requireYear] and [requireDay]
   /// both are true.
   String formatDate({bool requireYear = false, bool requireDay = false, int index = 0}) {
-    DateTime _date = this.datetimes[index].toDate();
+    DateTime _date = this.datetimes[index];
     
     String date = DateFormat.d().format(_date);
     String dateSuffix = "th";
@@ -71,7 +73,7 @@ class Event {
 
   /// Formats [datetimes]. Example 2:00 pm
   String getTime({int index = 0}) {
-    return DateFormat.jm().format(datetimes[index].toDate());
+    return DateFormat.jm().format(datetimes[index]);
   }
 
   /// Checks whether the event is on mulitple days or not.
@@ -100,6 +102,33 @@ class EventPool {
   /// Clears all the [event]s in the list
   static void clearEvents() {
     EventPool.events = [];
+  }
+
+  /// Helper function to get day 'x' events of a fest
+  static List<Event> getEventsOfDay({@required int day, List<Event> events}) {
+    if (events == null)
+      events = EventPool.events;
+
+    // defining variables to store the events
+    List<Event> res = List<Event>();
+    
+    // defining variable to store the duration
+    Duration duration = Duration(days: day - 1);
+
+    // for every event
+    for (int i = 0; i < events.length; i++) {
+
+      // for all the dates the event will occur on
+      for (int j = 0; j < events[i].datetimes.length; j++)
+      
+        // if a date of the event matches the first day + duration, add the event to [res]
+        if (Event.festFirstDay.toUtc().add(duration).day == events[i].datetimes[j].toUtc().day) {
+          res.add(events[i]);
+          break;
+        }
+    }
+
+    return res;
   }
 }
 
