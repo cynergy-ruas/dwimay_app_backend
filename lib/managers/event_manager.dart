@@ -25,7 +25,7 @@ class EventManager {
         continue;
 
       EventPool.addEvent(Event(
-        datetime: data[i]["datetime"],
+        datetimes: data[i]["datetimes"],
         department: data[i]["department"],
         description: data[i]["description"],
         id: data[i]["id"],
@@ -39,13 +39,13 @@ class EventManager {
   }
 
   /// Updates an event referenced by [documentID] with the values given as arguments.
-  Future<void> updateEvent({@required Event event, DateTime datetime, String department,
+  Future<void> updateEvent({@required Event event, List<DateTime> datetimes, String department,
     String description, String name, String speaker, String type, String venue}) async {
       
     // modifying event object if the given parameter is not null
     // and if its not same as the old one.
-    if (datetime != null && event.datetime != Timestamp.fromDate(datetime))
-      event.datetime = Timestamp.fromDate(datetime);
+    if (datetimes != null && event.datetimes != datetimes.map((date) => Timestamp.fromDate(date)).toList())
+      event.datetimes = datetimes.map((date) => Timestamp.fromDate(date)).toList();
     if (department != null && event.department != department)
       event.department = department;
     if (description != null && event.description != description)

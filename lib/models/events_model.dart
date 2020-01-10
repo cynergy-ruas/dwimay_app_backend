@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 
 class Event {
   /// Date and time of the event.
-  Timestamp datetime;
+  List<Timestamp> datetimes;
 
   /// The department conducting the event.
   String department;
@@ -32,7 +32,7 @@ class Event {
   String documentID;
 
   Event({
-    @required this.datetime,
+    @required this.datetimes,
     @required this.department,
     @required this.description,
     @required this.id,
@@ -48,13 +48,13 @@ class Event {
     return "Event[Name: $name]";
   }
 
-  /// Formats [datetime]. Example: 
+  /// Formats [datetimes]. Example: 
   /// "26th March, 2019", if [requireYear] is true,
   /// "Tuesday, 26th March" if [requireDay] is true,
   /// "Tuesday, 26th March, 2019" if [requireYear] and [requireDay]
   /// both are true.
-  String formatDate({bool requireYear = false, bool requireDay = false}) {
-    DateTime _date = this.datetime.toDate();
+  String formatDate({bool requireYear = false, bool requireDay = false, int index = 0}) {
+    DateTime _date = this.datetimes[index].toDate();
     
     String date = DateFormat.d().format(_date);
     String dateSuffix = "th";
@@ -69,10 +69,13 @@ class Event {
            ((requireYear) ? ", " + DateFormat.y().format(_date) : ""); 
   }
 
-  /// Formats [datetime]. Example 2:00 pm
-  String getTime() {
-    return DateFormat.jm().format(datetime.toDate());
+  /// Formats [datetimes]. Example 2:00 pm
+  String getTime({int index = 0}) {
+    return DateFormat.jm().format(datetimes[index].toDate());
   }
+
+  /// Checks whether the event is on mulitple days or not.
+  bool isMultiDayEvent() => (datetimes.length == 1) ? false : true;
 
   /// Sets the documentID.
   void setDocumentID(String documentID) {
