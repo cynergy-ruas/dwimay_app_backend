@@ -83,26 +83,6 @@ class Event {
   void setDocumentID(String documentID) {
     this.documentID = documentID;
   } 
-}
-
-class EventPool {
-  static List<Event> events = [];
-
-  /// Sets the events in the [EventPool] to the one provided 
-  /// in the argument.
-  static void setEvents(List<Event> events) {
-    EventPool.events = events;
-  }
-
-  /// Adds the [event] to the [EventPool]
-  static void addEvent(Event event) {
-    EventPool.events.add(event);
-  }
-
-  /// Clears all the [event]s in the list
-  static void clearEvents() {
-    EventPool.events = [];
-  }
 
   /// Helper function to get day 'x' events of a fest
   static List<Event> getEventsOfDay({@required int day, List<Event> events}) {
@@ -132,6 +112,28 @@ class EventPool {
   }
 }
 
+/// Contains all the events.
+class EventPool {
+  static List<Event> events = [];
+
+  /// Sets the events in the [EventPool] to the one provided 
+  /// in the argument.
+  static void setEvents(List<Event> events) {
+    EventPool.events = events;
+  }
+
+  /// Adds the [event] to the [EventPool]
+  static void addEvent(Event event) {
+    EventPool.events.add(event);
+  }
+
+  /// Clears all the [event]s in the list
+  static void clearEvents() {
+    EventPool.events = [];
+  }
+}
+
+/// constants to identify a department.
 class Department {
   static const String AerospaceAndAutomotive = "ASE";
   static const String ComputerScience = "CSE";

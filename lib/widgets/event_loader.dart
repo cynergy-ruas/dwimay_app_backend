@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 /// Widget that loads and displays the events.
 class EventLoader extends StatefulWidget {
   /// callback to execute when exception occurs.
-  final void Function(BuildContext, Exception) onError;
+  final void Function(BuildContext, dynamic) onError;
 
   /// Widget to display when the data is loading
   final Widget onLoading;
@@ -44,7 +44,7 @@ class EventLoaderState extends State<EventLoader> {
   Widget get onUninitialized => widget.onUninitialized;
   Widget get onLoading => widget.onLoading;
   Widget Function(List<Event>) get onLoaded => widget.onLoaded;
-  void Function(BuildContext, Exception) get onError => widget.onError;
+  void Function(BuildContext, dynamic) get onError => widget.onError;
 
   @override
   void initState() {

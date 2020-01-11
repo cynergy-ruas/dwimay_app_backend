@@ -64,10 +64,10 @@ class AuthLoading extends AuthState {
 
 /// The state when an error occurs while logging in
 class AuthError extends AuthState {
-  final Exception exception;
+  final exception;
   
   AuthError({@required this.exception});
-  String toString() => "AuthError { error: ${exception.toString()} }";
+  String toString() => "AuthError [error: ${exception.toString()}]";
 }
 
 // Defining the Bloc. Logic goes here

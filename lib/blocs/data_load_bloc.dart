@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:dwimay_backend/managers/manager.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
@@ -13,6 +14,18 @@ abstract class DataLoadEvent extends Equatable {
 class BeginDataLoad extends DataLoadEvent {
   @override
   String toString() => "BeginDataLoad";
+}
+
+/// The event emitted when data is to be updated
+class UpdateData extends DataLoadEvent {
+
+  /// Additional information
+  final dynamic payload;
+
+  UpdateData({this.payload}) : super(payload);
+
+  @override
+  String toString() => "UpdateData[payload: $payload]";
 }
 
 // Defining the states
@@ -36,10 +49,10 @@ class DataLoadOnGoing extends DataLoadState {
 
 /// The state when there is an error loading data
 class DataLoadError extends DataLoadState {
-  final Exception exception;
+  final exception;
   DataLoadError({@required this.exception}) : super();
 
-  String toString() => "DataLoadError: ${exception.toString()}";
+  String toString() => "DataLoadError[error: ${exception.toString()}]";
 }
 
 /// The state when data loading is complete
@@ -52,7 +65,7 @@ class DataLoadComplete extends DataLoadState {
 
 class DataLoadBloc extends Bloc<DataLoadEvent, DataLoadState>{
   
-  final manager;
+  final Manager manager;
   
   DataLoadBloc({@required this.manager});
 
@@ -69,10 +82,25 @@ class DataLoadBloc extends Bloc<DataLoadEvent, DataLoadState>{
 
       // loading data
       try {
-        await manager.loadData();
+        await manager.load();
         // yielding data load complete state
         yield DataLoadComplete();
       } 
+      catch (e) {
+        yield DataLoadError(exception: e);
+        yield initialState;
+      }
+    }
+
+    if (event is UpdateData) {
+      // yielding data load on going
+      yield DataLoadOnGoing();
+
+      try {
+        await manager.update();
+        // yielding data load complete state
+        yield DataLoadComplete();
+      }
       catch (e) {
         yield DataLoadError(exception: e);
         yield initialState;

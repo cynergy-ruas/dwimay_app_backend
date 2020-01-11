@@ -1,12 +1,13 @@
+import 'package:dwimay_backend/managers/manager.dart';
 import 'package:meta/meta.dart';
 import 'package:dwimay_backend/models/events_model.dart';
 import 'package:dwimay_backend/services/database.dart';
 
 /// Loads the event data using the database API and stores it
 /// in the [EventPool]
-class EventManager {
+class EventManager extends Manager{
 
-  Future <void> loadData() async {
+  Future<void> load() async {
     // getting instance of database
     Database db = await Database.instance;
 
@@ -50,7 +51,7 @@ class EventManager {
   }
 
   /// Updates an event referenced by [documentID] with the values given as arguments.
-  Future<void> updateEvent({@required Event event, List<DateTime> datetimes, String department,
+  void updateEvent({@required Event event, List<DateTime> datetimes, String department,
     String description, String name, String speaker, String type, String venue}) async {
       
     // modifying event object if the given parameter is not null

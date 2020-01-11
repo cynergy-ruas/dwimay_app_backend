@@ -37,7 +37,7 @@ class _LoginExampleState extends State<LoginExample> {
 
         // callback to execute when an error occurs during the 
         // authentication process
-        onError: (BuildContext context, Exception e) => Scaffold.of(context).showSnackBar(
+        onError: (BuildContext context, dynamic e) => Scaffold.of(context).showSnackBar(
           SnackBar(
             content: Text('${e.toString()}'),
             backgroundColor: Colors.red,

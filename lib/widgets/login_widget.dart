@@ -21,7 +21,7 @@ class LoginWidget extends StatefulWidget {
   final Widget loginForm;
 
   /// Callback to execute when login error occurs.
-  final void Function(BuildContext, Exception) onError;
+  final void Function(BuildContext, dynamic) onError;
 
   LoginWidget({Key key, this.onUninitialized, @required this.loginForm, @required this.onLoading,
                @required this.onSuccess, @required this.onError})
@@ -41,7 +41,7 @@ class LoginWidgetState extends State<LoginWidget> {
   Widget get onLoading => widget.onLoading;
   Widget get onSuccess => widget.onSuccess;
   Widget get loginForm => widget.loginForm;
-  void Function(BuildContext, Exception) get onError => widget.onError;
+  void Function(BuildContext, dynamic) get onError => widget.onError;
 
   /// The [AuthBloc]
   final AuthBloc _bloc = AuthBloc();

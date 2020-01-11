@@ -26,7 +26,7 @@ class _EventLoadExampleState extends State<EventLoadExample> {
 
           // widget to display when the events are loaded.
           onLoaded: (List<Event> events) {
-            events = EventPool.getEventsOfDay(day: 3, events: events);
+            events = Event.getEventsOfDay(day: 3, events: events);
             print(events);
             return ListView.builder(
               itemCount: events.length,
@@ -40,7 +40,7 @@ class _EventLoadExampleState extends State<EventLoadExample> {
             );
           },
 
-          onError: (BuildContext context, Exception e) => Scaffold.of(context).showSnackBar(
+          onError: (BuildContext context, dynamic e) => Scaffold.of(context).showSnackBar(
             SnackBar(
               content: Text('${e.toString()}'),
               backgroundColor: Colors.red,
