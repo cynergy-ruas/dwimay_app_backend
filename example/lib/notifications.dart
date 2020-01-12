@@ -8,10 +8,6 @@ class NotificationsExample extends StatefulWidget {
 
 class _NotificationsExampleState extends State<NotificationsExample> {
 
-  /// key used to access the [AnnouncementBuilderState]. Used to call
-  /// the [clear] function to clear all the events.
-  final GlobalKey<AnnouncementsBuilderState> announcementsKey = GlobalKey<AnnouncementsBuilderState>();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,22 +16,16 @@ class _NotificationsExampleState extends State<NotificationsExample> {
       ),
 
       // Building the [NotificationProvider]
-      body: NotificationProvider(
+      body: NotificationsListener(
         // What to do when a notification arrives when the app is in foreground
         onMessage: (BuildContext context, Map<String, dynamic> message) {
           
-          // adding message to the [AnnouncementManager] to update the 
-          // [AnnouncementPool]
-          AnnouncementManager.add(payload: message);
-
           // showing snackbar
           Scaffold.of(context).showSnackBar(
             SnackBar(
               content: Text(message.toString()),
             )
           );
-
-          setState(() {});
         },
 
         // the rest of the app
@@ -72,7 +62,7 @@ class _NotificationsExampleState extends State<NotificationsExample> {
           SizedBox(height: 40,),
 
           // button to clear announcements
-          DeleteButton(announcementsKey: announcementsKey),
+          DeleteButton(),
 
           // gap
           SizedBox(height: 40,),
@@ -86,7 +76,6 @@ class _NotificationsExampleState extends State<NotificationsExample> {
           // the previous announcements
           Expanded(
             child: AnnouncementsBuilder(
-              key: announcementsKey,
               builder: (BuildContext context, List<Announcement> announcements) {
                 return ListView.builder(
                   itemCount: announcements.length,
@@ -107,7 +96,7 @@ class _NotificationsExampleState extends State<NotificationsExample> {
 }
 
 /// Button to subscribe to notifications for events. 
-/// In a separate widget so that [NotificationProvider.of] can 
+/// In a separate widget so that [NotificationsListener.of] can 
 /// work properly.
 class SubscribeButton extends StatelessWidget {
   @override
@@ -115,7 +104,7 @@ class SubscribeButton extends StatelessWidget {
     return RaisedButton(
       child: Text("Subscribe to test event"),
       onPressed: () {
-        NotificationProvider.of(context).subscribe(topic: "t12")
+        NotificationsListener.of(context).subscribe(topic: "t12")
         .then((value) => Scaffold.of(context).showSnackBar(
           SnackBar(content: Text("Subscribed"),)
         ));
@@ -125,7 +114,7 @@ class SubscribeButton extends StatelessWidget {
 }
 
 /// Button to unsubscribe from notifications for events. 
-/// In a separate widget so that [NotificationProvider.of] can 
+/// In a separate widget so that [NotificationsListener.of] can 
 /// work properly.
 class UnsubscribeButton extends StatelessWidget {
   @override
@@ -133,7 +122,7 @@ class UnsubscribeButton extends StatelessWidget {
     return RaisedButton(
       child: Text("Unsubscribe from test event"),
       onPressed: () {
-        NotificationProvider.of(context).unsubscribe(topic: "t12")
+        NotificationsListener.of(context).unsubscribe(topic: "t12")
         .then((value) => Scaffold.of(context).showSnackBar(
           SnackBar(content: Text("Unsubscribed"),)
         ));
@@ -143,23 +132,17 @@ class UnsubscribeButton extends StatelessWidget {
 }
 
 /// Button to clear events. In a separate widget so 
-/// that [Scaffold.of] can work properly.
+/// that [NotificationsListener.of] can work properly.
 class DeleteButton extends StatelessWidget {
-
-  /// key used to access the [AnnouncementBuilderState]. Used to call
-  /// the [clear] function to clear all the events.
-  final GlobalKey<AnnouncementsBuilderState> announcementsKey;
-
-  DeleteButton({@required this.announcementsKey});
 
   @override
   Widget build(BuildContext context) {
     return RaisedButton(
       child: Text("Clear announcements"),
       onPressed: () {
-        announcementsKey.currentState.clear()
-        .then((value) => Scaffold.of(context).showSnackBar(
-          SnackBar(content: Text("Deleted all announcements"),)
+        NotificationsListener.of(context).deletePersistent()
+        .then((_) => Scaffold.of(context).showSnackBar(
+          SnackBar(content: Text("Deleted all announcements."),)
         ));
       },
     );

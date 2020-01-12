@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 
 /// represents an announcement
@@ -34,21 +35,41 @@ class Announcement {
 class AnnouncementPool {
   
   /// The announcements
-  static List<Announcement> _announcements = List<Announcement>();
+  ValueNotifier<List<Announcement>> _announcements;
 
+  /// instance of this class
+  static AnnouncementPool _instance;
+
+  AnnouncementPool._() :
+    _announcements =  ValueNotifier<List<Announcement>>(List<Announcement>());
+  
   /// Adds an announcement to the pool
-  static void add({@required Announcement announcement}) => _announcements.add(announcement);
+  void add({@required Announcement announcement}) => 
+  // creating a new list and assigning it to [_announcements.value] so 
+  // that the [ValueNotifier] calls [notifyListeners]. 
+  _announcements.value = List.from(_announcements.value)..add(announcement);
 
   /// Adds a list of announcements to the pool
-  static void addAll({@required List<Announcement> announcements}) => 
-    _announcements.addAll(announcements);
+  void addAll({@required List<Announcement> announcements}) => 
+    _announcements.value = List.from(_announcements.value)..addAll(announcements);
 
   /// Clears the annoucements in the pool
-  static void clear() => _announcements = List<Announcement>();
+  void clear() => _announcements.value = List<Announcement>();
   
   /// The raw form of the announcements
-  static List<Map<String, dynamic>> get raws => _announcements.map((a) => a.toMap()).toList();
+  List<Map<String, dynamic>> get raws => _announcements.value.map((a) => a.toMap()).toList();
 
   /// The annoucements
-  static List<Announcement> get announcements => _announcements;
+  List<Announcement> get announcements => _announcements.value;
+
+  /// The notifier
+  ValueNotifier<List<Announcement>> get listenable => _announcements;
+
+  /// returns the instance of this class
+  static AnnouncementPool get instance {
+    if (_instance == null)
+      _instance = AnnouncementPool._();
+
+    return _instance;
+  }
 }

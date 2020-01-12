@@ -22,7 +22,7 @@ class UpdateData extends DataLoadEvent {
   /// Additional information
   final dynamic payload;
 
-  UpdateData({this.payload}) : super(payload);
+  UpdateData({this.payload});
 
   @override
   String toString() => "UpdateData[payload: $payload]";
@@ -97,7 +97,7 @@ class DataLoadBloc extends Bloc<DataLoadEvent, DataLoadState>{
       yield DataLoadOnGoing();
 
       try {
-        await manager.update();
+        await manager.update(payload: event.payload);
         // yielding data load complete state
         yield DataLoadComplete();
       }

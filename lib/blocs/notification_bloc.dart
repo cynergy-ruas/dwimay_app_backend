@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:dwimay_backend/dwimay_backend.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
@@ -7,6 +8,11 @@ import 'package:meta/meta.dart';
 /// The base class for notification events
 abstract class NotificationEvent extends Equatable {
   NotificationEvent([List props = const []]) : super(props);
+}
+
+/// The event emitted when the bloc is initialized
+class NotificationInit extends NotificationEvent {
+  String toString() => "Notification Init";
 }
 
 /// The event emitted when a notification is received
@@ -47,6 +53,10 @@ class ShowNotificationUI extends NotificationState {
 
 class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
 
+  final AnnouncementManager manager;
+
+  NotificationBloc({@required this.manager});
+
   @override 
   NotificationState get initialState => NotificationUninitialized();
 
@@ -55,8 +65,19 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   /// A notification ([NotificationRecieved]) occurs to signal 
   /// the app to show the appropriate UI.
   Stream<NotificationState> mapEventToState(NotificationEvent event) async* {
+
+    // if notifications are initialized, load all notifications
+    // from local storage
+    if (event is NotificationInit)
+      manager.load();
+
     if (event is NotificationReceived) {
+      // yeilding event to show the appropriate UI
       yield ShowNotificationUI(message: event.message);
+
+      // adding the notification to the pool and local storage
+      manager.update(payload: event.message);
+
       yield initialState;
     }
   }

@@ -60,24 +60,13 @@ class FirebaseNotificationSettings {
 
     return _instance;
   }
-}
 
-/// Provides additional services of firebase cloud messaging, such 
-/// as subscribing to a topic, unsubscribing from a topic, etc.
-class FirebaseNotificationServices extends InheritedWidget {
+  /// Subscribes device to topic
+  Future<void> subscribeToTopic({@required String topic}) => 
+    _messaging.subscribeToTopic(topic);
 
-  FirebaseNotificationServices({Widget child}) : super(child: child);
+  /// Unsubscribes device to topic
+  Future<void> unsubscribeFromTopic({@required String topic}) => 
+    _messaging.unsubscribeFromTopic(topic);
 
-  /// Subscribes device to a given topic
-  Future<void> subscribe({@required String topic}) {
-    return FirebaseNotificationSettings.instance._messaging.subscribeToTopic(topic);
-  }
-
-  /// Unsubscribes device from a given topic
-  Future<void> unsubscribe({@required String topic}) {
-    return FirebaseNotificationSettings.instance._messaging.unsubscribeFromTopic(topic);
-  }
-
-  @override
-  bool updateShouldNotify(InheritedWidget oldWidget) => false;
 }

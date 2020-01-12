@@ -13,12 +13,12 @@ class AnnouncementManager extends Manager {
     FileProvider _instance = await FileProvider.instance;
 
     // clearing the pool
-    AnnouncementPool.clear();
+    AnnouncementPool.instance.clear();
 
     // populating the pool with [Announcement] objects by loading
     // the data from local storage and converting each of the loaded
     // data into an [Announcement] object.
-    AnnouncementPool.addAll(
+    AnnouncementPool.instance.addAll(
       announcements: (await _instance.loadAnnouncements()).map<Announcement>(
         (a) => Announcement.fromMap(map: a)
       ).toList()
@@ -28,20 +28,17 @@ class AnnouncementManager extends Manager {
   /// Updates the [AnnouncementPool] and the local storage.
   /// called from a [Bloc].
   @override
-  Future<void> update({dynamic payload}) => add(payload: payload);
-
-  /// Updates the [AnnouncementPool] and the local storage
-  static Future<void> add({Map<String, dynamic> payload}) {
+  Future<void> update({dynamic payload}) {
     // creating an [Announcement] object
     Announcement a = Announcement.fromMap(map: payload);
 
     // adding [Announcement] object to [AnnouncementPool]
-    AnnouncementPool.add(announcement: a);
+    AnnouncementPool.instance.add(announcement: a);
 
     // updating local storage
     return FileProvider.instance.then((instance) => 
       instance.dumpAnnouncments(
-        data: AnnouncementPool.raws
+        data: AnnouncementPool.instance.raws
       )
     );
   }
@@ -50,7 +47,7 @@ class AnnouncementManager extends Manager {
   /// local storage
   Future<void> delete() {
     // clearing [AnnouncementPool]
-    AnnouncementPool.clear();
+    AnnouncementPool.instance.clear();
 
     // deleting from local storage
     return FileProvider.instance.then((instance) => instance.deleteAnnouncements());
