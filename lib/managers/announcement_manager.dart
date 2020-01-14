@@ -1,6 +1,7 @@
 import 'package:dwimay_backend/managers/manager.dart';
 import 'package:dwimay_backend/models/announcement_model.dart';
 import 'package:dwimay_backend/services/file_provider.dart';
+import 'package:meta/meta.dart';
 
 /// Manages loading and updating the [AnnouncementPool] from 
 /// local storage.
@@ -25,7 +26,7 @@ class AnnouncementManager extends Manager {
     );
   }
 
-  /// Updates the [AnnouncementPool] and the local storage.
+  /// Adds an announcement to the [AnnouncementPool] and the local storage.
   /// called from a [Bloc].
   @override
   Future<void> update({dynamic payload}) {
@@ -34,6 +35,20 @@ class AnnouncementManager extends Manager {
 
     // adding [Announcement] object to [AnnouncementPool]
     AnnouncementPool.instance.add(announcement: a);
+
+    // updating local storage
+    return FileProvider.instance.then((instance) => 
+      instance.dumpAnnouncments(
+        data: AnnouncementPool.instance.raws
+      )
+    );
+  }
+
+  /// Removes announcement from [AnnouncementPool] and updates local storage.
+  Future<void> remove({@required int index}) {
+
+    // removing from [AnnouncementPool]
+    AnnouncementPool.instance.remove(index: index);
 
     // updating local storage
     return FileProvider.instance.then((instance) => 

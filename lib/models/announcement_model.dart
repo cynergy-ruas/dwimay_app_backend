@@ -53,6 +53,10 @@ class AnnouncementPool {
   void addAll({@required List<Announcement> announcements}) => 
     _announcements.value = List.from(_announcements.value)..addAll(announcements);
 
+  /// Removes an item from the [AnnouncementPool]
+  void remove({@required int index}) =>
+    _announcements.value = List.from(_announcements.value)..removeAt(index);
+
   /// Clears the annoucements in the pool
   void clear() => _announcements.value = List<Announcement>();
   

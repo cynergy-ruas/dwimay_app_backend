@@ -117,7 +117,10 @@ class NotificationsServices extends InheritedWidget {
     FirebaseNotificationSettings.instance.unsubscribeFromTopic(topic: topic);
   
   /// Clears announcements/notifications from local storage and pool
-  Future<void> deletePersistent() => manager.delete();
+  Future<void> deleteAll() => manager.delete();
+
+  /// Removes a single announcement from local storage and pool
+  Future<void> delete({@required int index}) => manager.remove(index: index);
 
   @override
   bool updateShouldNotify(InheritedWidget oldWidget) => false;

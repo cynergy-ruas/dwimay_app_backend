@@ -80,9 +80,25 @@ class _NotificationsExampleState extends State<NotificationsExample> {
                 return ListView.builder(
                   itemCount: announcements.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return ListTile(
-                      title: Text(announcements[index].title),
-                      subtitle: Text(announcements[index].body),
+                    return Dismissible(
+                      key: ValueKey(announcements[index]),
+                      direction: DismissDirection.endToStart,
+                      background: Container(
+                        color: Colors.red,
+                        padding: EdgeInsets.only(right: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            Icon(Icons.delete)
+                          ],
+                        ),
+                      ),
+                      child: ListTile(
+                        title: Text(announcements[index].title),
+                        subtitle: Text(announcements[index].body),
+                      ),
+                      onDismissed: (DismissDirection direction) =>
+                        NotificationsListener.of(context).delete(index: index),
                     );
                   },
                 );
@@ -140,7 +156,7 @@ class DeleteButton extends StatelessWidget {
     return RaisedButton(
       child: Text("Clear announcements"),
       onPressed: () {
-        NotificationsListener.of(context).deletePersistent()
+        NotificationsListener.of(context).deleteAll()
         .then((_) => Scaffold.of(context).showSnackBar(
           SnackBar(content: Text("Deleted all announcements."),)
         ));
