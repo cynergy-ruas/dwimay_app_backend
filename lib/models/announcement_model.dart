@@ -21,6 +21,8 @@ class Announcement {
     this.data = Map<String, dynamic>.from(map['data']);
   }
 
+  Announcement.fromRaw({@required this.title, @required this.body, this.data});
+
   /// converts the [Announcement] to a [Map]
   Map<String, dynamic> toMap() => <String, dynamic> {
     "notification": {

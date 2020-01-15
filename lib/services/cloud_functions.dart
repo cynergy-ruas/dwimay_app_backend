@@ -17,3 +17,22 @@ Future<dynamic> updateClearanceForUser({@required String email, @required int cl
   // returning response
   return response.data;
 }
+
+/// Publishes a notification
+Future<dynamic> publishNotification(
+  {@required String topic, @required String title, @required String body, @required Map<String, dynamic> data}) async {
+  // getting reference to cloud function
+  final HttpsCallable publishNotification = CloudFunctions.instance.getHttpsCallable(
+    functionName: "publishNotification"
+  );
+
+  // calling the function with the data
+  HttpsCallableResult response = await publishNotification.call({
+    "topic": topic,
+    "title": title,
+    "body": body,
+    "data": data
+  });
+
+  return response.data;
+}

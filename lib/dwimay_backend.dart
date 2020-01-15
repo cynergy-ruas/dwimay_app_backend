@@ -1,6 +1,7 @@
 library dwimay_backend;
 
 export 'package:dwimay_backend/managers/announcement_manager.dart';
+export 'package:dwimay_backend/managers/functions_manager.dart';
 export 'package:dwimay_backend/models/events_model.dart';
 export 'package:dwimay_backend/models/user_model.dart';
 export 'package:dwimay_backend/models/announcement_model.dart';

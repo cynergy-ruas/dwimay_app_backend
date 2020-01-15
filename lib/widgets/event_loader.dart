@@ -26,8 +26,8 @@ class EventLoader extends StatefulWidget {
   /// [loadData] method should be called externally.
   final bool beginLoad;
 
-  EventLoader({Key key, @required this.onUninitialized, @required this.onLoading, 
-                @required this.onLoaded, @required this.onError, this.beginLoad = false}) : super(key: key);
+  EventLoader({Key key, this.onUninitialized, @required this.onLoading, 
+                @required this.onLoaded, this.onError, this.beginLoad = false}) : super(key: key);
 
   @override
   EventLoaderState createState() => EventLoaderState();
@@ -66,7 +66,7 @@ class EventLoaderState extends State<EventLoader> {
           // if there is an error,
           if (state is DataLoadError)
             // execute [onError] callback
-            onError(context, state.exception);
+            onError?.call(context, state.exception);
         },
 
         child: BlocBuilder<DataLoadBloc, DataLoadState> (
@@ -76,7 +76,7 @@ class EventLoaderState extends State<EventLoader> {
           builder: (BuildContext context, DataLoadState state) {
             // if the data load is not started,
             if (state is DataLoadUnintialized)
-              return onUninitialized;
+              return onUninitialized ?? Container();
             
             // if the data is loading,
             if (state is DataLoadOnGoing)

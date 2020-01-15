@@ -104,9 +104,44 @@ class _NotificationsExampleState extends State<NotificationsExample> {
                 );
               },
             )
-          )
+          ),
+
+          // gap
+          SizedBox(height: 20,),
+
+          // button to publish notification
+          PublishButton(),
+
+          // gap
+          SizedBox(height: 20,)
         ],
       )
+    );
+  }
+}
+
+/// Button to publish notification
+class PublishButton extends StatelessWidget {
+  const PublishButton({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return RaisedButton(
+      child: Text("Publish Notification"),
+      onPressed: () {
+        FunctionsManager.instance.publishNotification(
+          topic: "t12",
+          announcement: Announcement.fromRaw(
+            title: "Title!",
+            body: "Body!!",
+            data: {
+              "description": "Some long description"
+            }
+          )
+        );
+      },
     );
   }
 }
