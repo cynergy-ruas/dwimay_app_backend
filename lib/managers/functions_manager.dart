@@ -23,6 +23,13 @@ class FunctionsManager extends Manager {
       data: announcement.data
     );
 
+  /// Updates the clearance for a user
+  Future<dynamic> updateClearance({@required String email, @required int clearance}) =>
+    cloud_functions.updateClearanceForUser(
+      email: email,
+      clearance: clearance
+    );
+
   /// Gets the instance of this class
   static FunctionsManager get instance {
     if (_instance == null)
