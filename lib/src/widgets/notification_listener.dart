@@ -1,3 +1,4 @@
+import 'package:dwimay_backend/dwimay_backend.dart';
 import 'package:dwimay_backend/src/blocs/notifications/bloc.dart';
 import 'package:dwimay_backend/src/blocs/notifications/states.dart';
 import 'package:dwimay_backend/src/services/notifications.dart';
@@ -10,7 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class NotificationListener extends StatefulWidget {
 
   /// Builder function that builds the UI when a notification arrives
-  final void Function(BuildContext, Map<String, dynamic>) onMessage;
+  final Widget Function(BuildContext, Map<String, dynamic>) onMessage;
 
   /// Callback to execute when a notification arrives when the application
   /// is in background. If not given, resumes the app by default.
@@ -63,7 +64,15 @@ class _NotificationListenerState extends State<NotificationListener> {
       bloc: widget.bloc,
       listener: (BuildContext context, NotificationState state) {
         if (state is ShowNotificationUI) 
-          widget.onMessage(context, state.message);
+          showOverlayNotification((context) => 
+            Dismissible(
+              key: UniqueKey(),
+              direction: DismissDirection.up,
+              child: widget.onMessage(context, state.message),
+              onDismissed: (DismissDirection direction) => 
+                OverlaySupportEntry.of(context).dismiss(animate: false),
+            )
+          );
       },
       child: widget.child,
     );

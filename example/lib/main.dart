@@ -17,12 +17,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // adding the backend provider
     return BackendProvider(
-      onMessage: (BuildContext context, Map<String, dynamic> message) {  
+      onMessage: (BuildContext context, Map<String, dynamic> message) {
         // showing overlay
-        showSimpleNotification(
-          Text(message.toString())
+        return SafeArea(
+          child: Card(
+            child: Text(message.toString()),
+          ),
         );
       },
+
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
