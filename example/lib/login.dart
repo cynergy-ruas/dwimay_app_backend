@@ -7,9 +7,6 @@ class LoginExample extends StatefulWidget {
 }
 
 class _LoginExampleState extends State<LoginExample> {
-  /// Key to access the [LoginWidget]. Used to execute
-  /// login and logout
-  GlobalKey<LoginWidgetState> loginKey = GlobalKey<LoginWidgetState>();
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +18,8 @@ class _LoginExampleState extends State<LoginExample> {
       // using a [Builder] widget so that snackbars can be 
       // shown.
       body: LoginWidget(
-        key: loginKey,
+
+        bloc: BackendProvider.of<AuthBloc>(context),
 
         // widget to display when the login screen is not loaded
         onUninitialized: SplashScreen(),
@@ -58,7 +56,7 @@ class HomePage extends StatelessWidget {
         SizedBox(height: 40,),
         RaisedButton(
           child: Text("Log out"),
-          onPressed: () => LoginWidget.of(context).logout(),
+          onPressed: () => BackendProvider.of<AuthBloc>(context).logout(),
         ),
       ],
     );
@@ -92,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
             obscureText: true,
           ),
           RaisedButton(
-            onPressed: () => LoginWidget.of(context).login(
+            onPressed: () => BackendProvider.of<AuthBloc>(context).login(
               email: emailController.text,
               password: passwordController.text
             ),

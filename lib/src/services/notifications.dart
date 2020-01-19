@@ -1,8 +1,9 @@
 import 'dart:io';
+
+import 'package:dwimay_backend/src/blocs/notifications/bloc.dart';
+import 'package:dwimay_backend/src/blocs/notifications/events.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
-import 'package:dwimay_backend/blocs/notification_bloc.dart';
 
 typedef void NotificationCallback({@required Map<String, dynamic> message});
 
@@ -11,6 +12,8 @@ class FirebaseNotificationSettings {
   FirebaseMessaging _messaging;
 
   static FirebaseNotificationSettings _instance;
+
+  String deviceToken;
 
   FirebaseNotificationSettings._() {
     // creating object
@@ -22,6 +25,7 @@ class FirebaseNotificationSettings {
 
     // printing token
     _messaging.getToken().then((token) {
+      this.deviceToken = token;
       print("token: $token");
     });
   }

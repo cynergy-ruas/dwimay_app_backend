@@ -1,5 +1,5 @@
 import 'package:dwimay_backend/dwimay_backend.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide NotificationListener;
 
 class NotificationsExample extends StatefulWidget {
   @override
@@ -15,22 +15,7 @@ class _NotificationsExampleState extends State<NotificationsExample> {
         title: Text("Notifications Test"),
       ),
 
-      // Building the [NotificationProvider]
-      body: NotificationsListener(
-        // What to do when a notification arrives when the app is in foreground
-        onMessage: (BuildContext context, Map<String, dynamic> message) {
-          
-          // showing snackbar
-          Scaffold.of(context).showSnackBar(
-            SnackBar(
-              content: Text(message.toString()),
-            )
-          );
-        },
-
-        // the rest of the app
-        child: page1(),
-      ),
+      body: page1(),
     );
   }
 
@@ -98,7 +83,7 @@ class _NotificationsExampleState extends State<NotificationsExample> {
                         subtitle: Text(announcements[index].body),
                       ),
                       onDismissed: (DismissDirection direction) =>
-                        NotificationsListener.of(context).delete(index: index),
+                        BackendProvider.of<NotificationBloc>(context).removeFromPool(index: index),
                     );
                   },
                 );
@@ -131,7 +116,7 @@ class PublishButton extends StatelessWidget {
     return RaisedButton(
       child: Text("Publish Notification"),
       onPressed: () {
-        FunctionsManager.instance.publishNotification(
+        CloudFunctions.instance.publishNotification(
           topic: "t12",
           announcement: Announcement.fromRaw(
             title: "Title!",
@@ -147,7 +132,7 @@ class PublishButton extends StatelessWidget {
 }
 
 /// Button to subscribe to notifications for events. 
-/// In a separate widget so that [NotificationsListener.of] can 
+/// In a separate widget so that [NotificationListener.of] can 
 /// work properly.
 class SubscribeButton extends StatelessWidget {
   @override
@@ -155,7 +140,7 @@ class SubscribeButton extends StatelessWidget {
     return RaisedButton(
       child: Text("Subscribe to test event"),
       onPressed: () {
-        NotificationsListener.of(context).subscribe(topic: "t12")
+        BackendProvider.of<NotificationBloc>(context).subscribe(topic: "t12")
         .then((value) => Scaffold.of(context).showSnackBar(
           SnackBar(content: Text("Subscribed"),)
         ));
@@ -165,7 +150,7 @@ class SubscribeButton extends StatelessWidget {
 }
 
 /// Button to unsubscribe from notifications for events. 
-/// In a separate widget so that [NotificationsListener.of] can 
+/// In a separate widget so that [NotificationListener.of] can 
 /// work properly.
 class UnsubscribeButton extends StatelessWidget {
   @override
@@ -173,7 +158,7 @@ class UnsubscribeButton extends StatelessWidget {
     return RaisedButton(
       child: Text("Unsubscribe from test event"),
       onPressed: () {
-        NotificationsListener.of(context).unsubscribe(topic: "t12")
+        BackendProvider.of<NotificationBloc>(context).unsubscribe(topic: "t12")
         .then((value) => Scaffold.of(context).showSnackBar(
           SnackBar(content: Text("Unsubscribed"),)
         ));
@@ -183,7 +168,7 @@ class UnsubscribeButton extends StatelessWidget {
 }
 
 /// Button to clear events. In a separate widget so 
-/// that [NotificationsListener.of] can work properly.
+/// that [NotificationListener.of] can work properly.
 class DeleteButton extends StatelessWidget {
 
   @override
@@ -191,7 +176,7 @@ class DeleteButton extends StatelessWidget {
     return RaisedButton(
       child: Text("Clear announcements"),
       onPressed: () {
-        NotificationsListener.of(context).deleteAll()
+        BackendProvider.of<NotificationBloc>(context).deleteAll()
         .then((_) => Scaffold.of(context).showSnackBar(
           SnackBar(content: Text("Deleted all announcements."),)
         ));

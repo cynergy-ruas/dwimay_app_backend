@@ -1,4 +1,4 @@
-import 'package:dwimay_backend/models/announcement_model.dart';
+import 'package:dwimay_backend/src/models/announcement_model.dart';
 import 'package:flutter/material.dart';
 
 /// The widget that builds the UI that displays the 

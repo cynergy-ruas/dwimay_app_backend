@@ -1,4 +1,4 @@
-import 'package:dwimay_backend/models/events_model.dart';
+import 'package:dwimay_backend/src/models/events_model.dart';
 import 'package:meta/meta.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 

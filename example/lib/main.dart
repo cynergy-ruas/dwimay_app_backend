@@ -1,11 +1,10 @@
+import 'package:dwimay_backend/dwimay_backend.dart';
 import 'package:example/event_load.dart';
 import 'package:example/login.dart';
 import 'package:example/notifications.dart';
 import 'package:example/qr.dart';
 import 'package:flutter/material.dart';
 import 'package:bloc/bloc.dart';
-import 'package:dwimay_backend/blocs/bloc_delegate.dart';
-
 
 void main() {
   BlocSupervisor.delegate = SimpleBlocDelegate();
@@ -16,12 +15,21 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    // adding the backend provider
+    return BackendProvider(
+      onMessage: (BuildContext context, Map<String, dynamic> message) {  
+        // showing overlay
+        showSimpleNotification(
+          Text(message.toString())
+        );
+      },
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: HomePage(),
       ),
-      home: HomePage(),
     );
   }
 }

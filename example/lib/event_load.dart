@@ -17,6 +17,7 @@ class _EventLoadExampleState extends State<EventLoadExample> {
         // using a [Builder] widget so that snackbars can be 
         // shown.
         child: EventLoader(
+          bloc: BackendProvider.of<EventLoadBloc>(context),
 
           // widget to display when the event loading has not begun.
           onUninitialized: LoadButton(),
@@ -58,8 +59,7 @@ class LoadButton extends StatelessWidget {
     return RaisedButton(
       child: Text("Load events"),
       onPressed: () { 
-        print(EventLoader.of(context));
-        EventLoader.of(context).loadData();
+        BackendProvider.of<EventLoadBloc>(context).add(BeginDataLoad());
       },
     );
   }

@@ -1,13 +1,59 @@
-import 'package:dwimay_backend/managers/manager.dart';
+import 'package:bloc/bloc.dart';
+import 'package:dwimay_backend/src/models/events_model.dart';
+import 'package:dwimay_backend/src/services/database.dart';
+import 'events.dart';
+import 'states.dart';
 import 'package:meta/meta.dart';
-import 'package:dwimay_backend/models/events_model.dart';
-import 'package:dwimay_backend/services/database.dart';
 
-/// Loads the event data using the database API and stores it
-/// in the [EventPool]
-class EventManager extends Manager{
+class EventLoadBloc extends Bloc<DataLoadEvent, DataLoadState>{
 
-  Future<void> load() async {
+  @override
+  DataLoadState get initialState => DataLoadUnintialized();
+
+  /// Maps [DataLoadEvent]s to [DataLoadState]s. Yields a [DataLoadState] in 
+  /// response to the [DataLoadEvent].
+  @override
+  Stream<DataLoadState> mapEventToState(DataLoadEvent event) async* {
+    if (event is BeginDataLoad) {
+      // yielding data load on going
+      yield DataLoadOnGoing();
+
+      // loading data
+      try {
+        await this._loadEvents();
+        // yielding data load complete state
+        yield DataLoadComplete();
+      } 
+      catch (e) {
+        yield DataLoadError(exception: e);
+        yield initialState;
+      }
+    }
+
+    if (event is UpdateData) {
+
+      try {
+        await this._updateEvent(
+          event: event.event,
+          datetimes: event.datetimes,
+          department: event.department,
+          description: event.description,
+          name: event.name,
+          speaker: event.speaker,
+          type: event.type,
+          venue: event.venue
+        );
+
+        yield DataLoadComplete();
+      }
+      catch (e) {
+        yield DataLoadError(exception: e);
+        yield initialState;
+      }
+    }
+  }
+
+  Future<void> _loadEvents() async {
     // getting instance of database
     Database db = await Database.instance;
 
@@ -51,7 +97,7 @@ class EventManager extends Manager{
   }
 
   /// Updates an event referenced by [documentID] with the values given as arguments.
-  void updateEvent({@required Event event, List<DateTime> datetimes, String department,
+  Future<void> _updateEvent({@required Event event, List<DateTime> datetimes, String department,
     String description, String name, String speaker, String type, String venue}) async {
       
     // modifying event object if the given parameter is not null
@@ -75,15 +121,6 @@ class EventManager extends Manager{
     Database db = await Database.instance;
 
     // updating event
-    await db.updateEvent(event: event);
-  }
-
-  /// Deletes an event.
-  Future<void> deleteEvent({@required Event event}) async {
-    // getting instance of database
-    Database db = await Database.instance;
-
-    // deleting the event
-    await db.deleteEvent(event: event);
-  }
+    return await db.updateEvent(event: event);
+  }  
 }
