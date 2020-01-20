@@ -61,7 +61,9 @@ class _BackendProviderState extends State<BackendProvider> {
           ),
 
           BlocProvider<AuthBloc>(
-            create: (context) => AuthBloc(),
+            create: (context) => AuthBloc(
+              getDeviceToken: _notificationBloc.getDeviceToken
+            ),
           ),
 
           BlocProvider<NotificationBloc>(

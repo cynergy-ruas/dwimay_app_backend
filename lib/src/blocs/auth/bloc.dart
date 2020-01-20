@@ -11,6 +11,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   LoginAuth _auth = LoginAuth.getInstance();
 
+  /// Function to get the device token
+  final String Function() getDeviceToken;
+
+  AuthBloc({@required this.getDeviceToken});
+
   @override
   AuthState get initialState => AuthUninitialized();
 
