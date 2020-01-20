@@ -49,6 +49,6 @@ class CloudFunctions {
   static CloudFunctions get instance {
     if (_instance == null) 
       _instance = CloudFunctions._();
-    return instance;
+    return _instance;
   }
 }
