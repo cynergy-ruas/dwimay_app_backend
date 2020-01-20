@@ -46,6 +46,22 @@ class CloudFunctions {
     return response.data;
   }
 
+  /// Assigns an event to a user
+  Future<dynamic> assignEventToUser({@required String email, @required String eventID}) async {
+    // getting reference to cloud function
+    final firebase_functions.HttpsCallable assignEventToUser = firebase_functions.CloudFunctions.instance.getHttpsCallable(
+      functionName: "assignEventToUser"
+    );
+
+    // calling the functoin with the data
+    firebase_functions.HttpsCallableResult response = await assignEventToUser.call({
+      email: email,
+      eventID: eventID
+    });
+
+    return response.data;
+  }
+
   static CloudFunctions get instance {
     if (_instance == null) 
       _instance = CloudFunctions._();
