@@ -53,10 +53,10 @@ class CloudFunctions {
       functionName: "assignEventToUser"
     );
 
-    // calling the functoin with the data
+    // calling the function with the data
     firebase_functions.HttpsCallableResult response = await assignEventToUser.call({
-      email: email,
-      eventID: eventID
+      "email": email,
+      "eventID": eventID
     });
 
     return response.data;
