@@ -79,17 +79,25 @@ class EventLoaderState extends State<EventLoader> {
 
         // building widget based on other states
         builder: (BuildContext context, DataLoadState state) {
+          // the widget to show
+          Widget child;
+
           // if the data load is not started,
           if (state is DataLoadUnintialized)
-            return onUninitialized ?? Container();
+            child = onUninitialized ?? Container();
           
           // if the data is loading,
           if (state is DataLoadOnGoing)
-            return onLoading;
+            child = onLoading;
 
           // if the data is loaded,
           else
-            return onLoaded(EventPool.events);
+            child = onLoaded(EventPool.events);
+
+          return AnimatedSwitcher(
+            duration: Duration(milliseconds: 500),
+            child: child,
+          );
         },
       ),
     );
