@@ -133,16 +133,7 @@ class EventPool {
   }
 }
 
-/// constants to identify a department.
-// class Department {
-//   static const String AerospaceAndAutomotive = "ASE";
-//   static const String ComputerScience = "CSE";
-//   static const String ElectricAndElectronics = "ECE";
-//   static const String Design = "DS";
-//   static const String Mechanical = "ME";
-//   static const String All = "All";
-// }
-
+/// constants to identify department
 enum Department {
   AerospaceAndAutomotive,
   All,
@@ -152,8 +143,10 @@ enum Department {
   Mechanical,
 }
 
+/// Extension to the [Department] enum.
 extension DepartmentExtras on Department {
 
+  /// The raw data related to each enum value
   static const data = {
     Department.AerospaceAndAutomotive: {
       "id": "ASE",
@@ -186,12 +179,15 @@ extension DepartmentExtras on Department {
     },
   };
 
+  /// gets the id of the department
   String get id =>
     DepartmentExtras.data[this]["id"];
 
+  /// gets the name of the department
   String get name =>
     DepartmentExtras.data[this]["name"];
 
+  /// gets the id from the name of the department
   static String getIdFromName(String name) =>
     DepartmentExtras.data.values.firstWhere(
       (info) => info["name"] == name,
