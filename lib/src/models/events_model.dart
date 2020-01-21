@@ -195,5 +195,5 @@ extension DepartmentExtras on Department {
   static String getIdFromName(String name) =>
     DepartmentExtras.data.values.firstWhere(
       (info) => info["name"] == name,
-    )["name"];
+    )["id"];
 }
