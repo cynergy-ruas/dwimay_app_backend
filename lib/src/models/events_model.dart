@@ -153,78 +153,47 @@ enum Department {
 }
 
 extension DepartmentExtras on Department {
-  String get id {
-    switch (this) {
-      case Department.AerospaceAndAutomotive:
-        return "ASE";
 
-      case Department.All:
-        return "ALL";
+  static const data = {
+    Department.AerospaceAndAutomotive: {
+      "id": "ASE",
+      "name": "Aeronautical and Automotive",
+    },
 
-      case Department.ComputerScience:
-        return "CSE";
+    Department.All: {
+      "id": "ALL",
+      "name": "All Departments",
+    },
 
-      case Department.Design:
-        return "DS";
+    Department.ComputerScience: {
+      "id": "CSE",
+      "name": "Computer Science",
+    },
 
-      case Department.ElectricAndElectronics:
-        return "ECE";
+    Department.Design: {
+      "id": "DS",
+      "name": "Design",
+    },
 
-      case Department.Mechanical:
-        return "ME";
+    Department.ElectricAndElectronics: {
+      "id": "ECE",
+      "name": "Electrical and Electronics",
+    },
 
-      default:
-        return null;
-    }
-  }
+    Department.Mechanical: {
+      "id": "ME",
+      "name": "Mechanical",
+    },
+  };
 
-  String get longName {
-    switch (this) {
-      case Department.AerospaceAndAutomotive:
-        return "Aeronautical and Automotive";
+  String get id =>
+    DepartmentExtras.data[this]["id"];
 
-      case Department.All:
-        return "All Departments";
+  String get name =>
+    DepartmentExtras.data[this]["name"];
 
-      case Department.ComputerScience:
-        return "Computer Science";
-
-      case Department.Design:
-        return "Design";
-
-      case Department.ElectricAndElectronics:
-        return "Electrical and Electronics";
-
-      case Department.Mechanical:
-        return "Mechanical";
-
-      default:
-        return null;
-    }
-  }
-
-  static String getIdFromLongName(String longName) {
-    switch (id) {
-      case "Aeronautical and Automotive":
-        return "ASE";
-
-      case "All Departments":
-        return "ALL";
-
-      case "Computer Science":
-        return "CSE";
-
-      case "Design":
-        return "DS";
-
-      case "Electrical and Electronics":
-        return "ECE";
-
-      case "Mechanical":
-        return "ME";
-
-      default:
-        return null;
-    }
-  }
+  static String getIdFromName(String name) =>
+    DepartmentExtras.data.values.firstWhere(
+      (info) => info["name"] == name,
+    )["name"];
 }
