@@ -134,11 +134,97 @@ class EventPool {
 }
 
 /// constants to identify a department.
-class Department {
-  static const String AerospaceAndAutomotive = "ASE";
-  static const String ComputerScience = "CSE";
-  static const String ElectricAndElectronics = "ECE";
-  static const String Design = "DS";
-  static const String Mechanical = "ME";
-  static const String All = "All";
+// class Department {
+//   static const String AerospaceAndAutomotive = "ASE";
+//   static const String ComputerScience = "CSE";
+//   static const String ElectricAndElectronics = "ECE";
+//   static const String Design = "DS";
+//   static const String Mechanical = "ME";
+//   static const String All = "All";
+// }
+
+enum Department {
+  AerospaceAndAutomotive,
+  All,
+  ComputerScience,
+  Design,
+  ElectricAndElectronics,
+  Mechanical,
+}
+
+extension DepartmentExtras on Department {
+  String get id {
+    switch (this) {
+      case Department.AerospaceAndAutomotive:
+        return "ASE";
+
+      case Department.All:
+        return "ALL";
+
+      case Department.ComputerScience:
+        return "CSE";
+
+      case Department.Design:
+        return "DS";
+
+      case Department.ElectricAndElectronics:
+        return "ECE";
+
+      case Department.Mechanical:
+        return "ME";
+
+      default:
+        return null;
+    }
+  }
+
+  String get longName {
+    switch (this) {
+      case Department.AerospaceAndAutomotive:
+        return "Aeronautical and Automotive";
+
+      case Department.All:
+        return "All Departments";
+
+      case Department.ComputerScience:
+        return "Computer Science";
+
+      case Department.Design:
+        return "Design";
+
+      case Department.ElectricAndElectronics:
+        return "Electrical and Electronics";
+
+      case Department.Mechanical:
+        return "Mechanical";
+
+      default:
+        return null;
+    }
+  }
+
+  static String getIdFromLongName(String longName) {
+    switch (id) {
+      case "Aeronautical and Automotive":
+        return "ASE";
+
+      case "All Departments":
+        return "ALL";
+
+      case "Computer Science":
+        return "CSE";
+
+      case "Design":
+        return "DS";
+
+      case "Electrical and Electronics":
+        return "ECE";
+
+      case "Mechanical":
+        return "ME";
+
+      default:
+        return null;
+    }
+  }
 }
