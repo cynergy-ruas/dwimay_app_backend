@@ -1,4 +1,4 @@
-import 'package:cloud_functions/cloud_functions.dart' as firebase_functions;
+import 'package:cloud_functions/cloud_functions.dart' as f;
 import 'package:dwimay_backend/src/models/announcement_model.dart';
 
 import 'package:meta/meta.dart';
@@ -13,12 +13,12 @@ class CloudFunctions {
   /// Updates the clearance level of a user using firebases's cloud functions.
   Future<dynamic> updateClearanceForUser({@required String email, @required int clearance}) async {
     // getting reference to cloud function
-    final firebase_functions.HttpsCallable updateClearance = firebase_functions.CloudFunctions.instance.getHttpsCallable(
+    final f.HttpsCallable updateClearance = f.CloudFunctions.instance.getHttpsCallable(
       functionName: "updateClearance"
     );
 
     // calling the function with the data
-    firebase_functions.HttpsCallableResult response = await updateClearance.call({
+    f.HttpsCallableResult response = await updateClearance.call({
       "email": email,
       "clearance": clearance,
     });
@@ -31,12 +31,12 @@ class CloudFunctions {
   Future<dynamic> publishNotification(
     {@required String topic, @required Announcement announcement}) async {
     // getting reference to cloud function
-    final firebase_functions.HttpsCallable publishNotification = firebase_functions.CloudFunctions.instance.getHttpsCallable(
+    final f.HttpsCallable publishNotification = f.CloudFunctions.instance.getHttpsCallable(
       functionName: "publishNotification"
     );
 
     // calling the function with the data
-    firebase_functions.HttpsCallableResult response = await publishNotification.call({
+    f.HttpsCallableResult response = await publishNotification.call({
       "topic": topic,
       "title": announcement.title,
       "body": announcement.body,
@@ -49,17 +49,44 @@ class CloudFunctions {
   /// Assigns an event to a user
   Future<dynamic> assignEventsToUser({@required String email, @required String eventID}) async {
     // getting reference to cloud function
-    final firebase_functions.HttpsCallable assignEventsToUser = firebase_functions.CloudFunctions.instance.getHttpsCallable(
+    final f.HttpsCallable assignEventsToUser = f.CloudFunctions.instance.getHttpsCallable(
       functionName: "assignEventsToUser"
     );
 
     // calling the function with the data
-    firebase_functions.HttpsCallableResult response = await assignEventsToUser.call({
+    f.HttpsCallableResult response = await assignEventsToUser.call({
       "email": email,
       "eventID": eventID
     });
 
     return response.data;
+  }
+
+  /// Registers a user
+  Future<bool> registerUser({@required String email, @required String password}) async {
+    // getting reference to cloud function
+    final f.HttpsCallable registerUser = f.CloudFunctions.instance.getHttpsCallable(
+      functionName: "registerUser"
+    );
+
+    // calling the function with the data and getting the response
+    try {
+      await registerUser.call({
+        "emailid": email,
+        "password": password,
+      });
+
+      // returning true, indicating that the registration was successful.
+      return true;
+    }
+    on f.CloudFunctionsException catch (e) {
+      print(e);
+      return false;
+    }
+    catch(e) {
+      print(e);
+      return false;
+    }
   }
 
   static CloudFunctions get instance {

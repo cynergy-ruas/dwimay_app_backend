@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:dwimay_backend/src/services/auth.dart';
 import 'package:dwimay_backend/src/models/user_model.dart';
+import 'package:dwimay_backend/src/services/cloud_functions.dart';
 
 // Defining the Bloc. Logic goes here
 
@@ -55,11 +56,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       
 
       try{
-        // logging in
-        await _auth.login(email: event.email, password: event.password);
-
-        // setting claims
-        User.instance.setClaims(await _auth.getClaims());
+        _login(email: event.email, password: event.password);
 
         // yield [AuthValid] state
         yield AuthValid();
@@ -72,8 +69,43 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     }
 
+    else if (event is Register) {
+      // yielding loading state
+      yield AuthLoading();
+
+      // attempt registration
+      bool res = await CloudFunctions.instance.registerUser(email: event.email, password: event.password);
+
+      // if the registration was unsuccessful, then
+      if (! res) {
+
+        // yielding error event
+        yield AuthError(exception: Exception("User has not paid for an event."));
+
+        // yielding login screen
+        yield AuthInvalid();
+      }
+      else {
+        
+        try {
+          // logging in
+          _login(email: event.email, password: event.password);
+
+          // yielding event to show the home page
+          yield AuthValid();
+        }
+        catch (e) {
+          // yielding the event to show the error
+          yield AuthError(exception: e);
+
+          // yielding the event to show the login screen
+          yield AuthInvalid();
+        }
+      }
+    }
+
     // if the user is trying to log out
-    else if (event is LogOut){
+    else {
       // yield loading state
       yield AuthLoading();
 
@@ -85,9 +117,22 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
+  /// Logs the user in and sets the claims.
+  void _login({@required String email, @required String password}) async {
+    // logging the user in
+    await _auth.login(email: email, password: password);
+
+    // setting claims
+    User.instance.setClaims(await _auth.getClaims());
+  }
+
   /// Logs the user in.
   void login({@required String email, @required String password}) => 
     this.add(LogIn(email: email, password: password));
+
+  /// Registers the user.
+  void register({@required String email, @required String password}) =>
+    this.add(Register(email: email, password: password));
 
   /// Logs the user out.
   void logout() => this.add(LogOut());
