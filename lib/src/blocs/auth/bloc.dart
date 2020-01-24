@@ -56,7 +56,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       
 
       try{
-        _login(email: event.email, password: event.password);
+        // logging the user in
+        await _auth.login(email: event.email, password: event.password);
+
+        // setting claims
+        User.instance.setClaims(await _auth.getClaims());
 
         // yield [AuthValid] state
         yield AuthValid();
@@ -88,8 +92,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       else {
         
         try {
-          // logging in
-          _login(email: event.email, password: event.password);
+          // logging the user in
+          await _auth.login(email: event.email, password: event.password);
+
+          // setting claims
+          User.instance.setClaims(await _auth.getClaims());
 
           // yielding event to show the home page
           yield AuthValid();
@@ -115,15 +122,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       // yield [AuthInvalid] state
       yield AuthInvalid();
     }
-  }
-
-  /// Logs the user in and sets the claims.
-  void _login({@required String email, @required String password}) async {
-    // logging the user in
-    await _auth.login(email: email, password: password);
-
-    // setting claims
-    User.instance.setClaims(await _auth.getClaims());
   }
 
   /// Logs the user in.
