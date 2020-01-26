@@ -3,7 +3,13 @@ class User {
   /// private constructor.
   User._();
 
+  /// The claims of the user
   Map<String, dynamic> claims;
+
+  /// The registered events of the user
+  List<String> regEventIDs;
+
+  /// The instance of this class
   static User _instance;
 
   /// Setter for [claims]
@@ -17,6 +23,11 @@ class User {
   String getEmailID() {
     return claims["email"];
   }
+
+  /// Returns the event id assigned to this user.
+  /// Will be null if the user is a level 0 user.
+  String getEventId() => 
+    claims["eventID"];
 
   /// Gets the clearance level of the user.
   /// The claims need to be set before this function

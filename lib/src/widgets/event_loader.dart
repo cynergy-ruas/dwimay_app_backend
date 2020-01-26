@@ -32,7 +32,7 @@ class EventLoader extends StatefulWidget {
 
   EventLoader({
     Key key,
-    @required this.bloc,
+    this.bloc,
     this.onUninitialized,
     @required this.onLoading, 
     @required this.onLoaded,
@@ -53,18 +53,24 @@ class EventLoaderState extends State<EventLoader> {
   Widget Function(List<Event>) get onLoaded => widget.onLoaded;
   void Function(BuildContext, dynamic) get onError => widget.onError;
 
+  /// The bloc. Used if [widget.bloc] is null
+  EventLoadBloc _bloc;
+
   @override
   void initState() {
     super.initState();
 
+    // initializing the event load bloc
+    _bloc = (widget.bloc != null) ? widget.bloc : EventLoadBloc();
+
     if (beginLoad)
-      widget.bloc.add(BeginDataLoad());
+      _bloc.add(BeginDataLoad());
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<EventLoadBloc, DataLoadState> (
-      bloc: widget.bloc,
+      bloc: _bloc,
 
       // listening for errors.
       listener: (BuildContext context, DataLoadState state) {
@@ -75,7 +81,7 @@ class EventLoaderState extends State<EventLoader> {
       },
 
       child: BlocBuilder<EventLoadBloc, DataLoadState> (
-        bloc: widget.bloc,
+        bloc: _bloc,
 
         // building widget based on other states
         builder: (BuildContext context, DataLoadState state) {
@@ -101,5 +107,14 @@ class EventLoaderState extends State<EventLoader> {
         },
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    // disposing bloc if the bloc was created here
+    if (widget.bloc == null)
+      _bloc.close();
   }
 }
