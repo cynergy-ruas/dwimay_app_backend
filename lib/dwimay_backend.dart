@@ -17,6 +17,7 @@ export 'package:dwimay_backend/src/widgets/notification_listener.dart';
 export 'package:dwimay_backend/src/widgets/qr_scanner.dart';
 export 'package:dwimay_backend/src/widgets/announcements_builder.dart';
 export 'package:dwimay_backend/src/widgets/backend_provider.dart';
+export 'package:dwimay_backend/src/widgets/registered_events_loader.dart';
 
 export 'package:dwimay_backend/src/services/cloud_functions.dart';
 

@@ -58,6 +58,29 @@ class HomePage extends StatelessWidget {
           child: Text("Log out"),
           onPressed: () => BackendProvider.of<AuthBloc>(context).logout(),
         ),
+        SizedBox(height: 20,),
+        RegisteredEventsLoader(
+          onLoading: Center(child: CircularProgressIndicator(),),
+          onError: (BuildContext context, dynamic error) {
+            Scaffold.of(context).showSnackBar(
+              SnackBar(
+                content: Text(error.toString()),
+                backgroundColor: Colors.red
+              )
+            );
+          },
+          onLoaded: (BuildContext context, List<String> eventIDs) {
+            return ListView.builder(
+              shrinkWrap: true,
+              itemCount: eventIDs.length,
+              itemBuilder: (BuildContext context, int index) {
+                return ListTile(
+                  title: Text(eventIDs[index]),
+                );
+              },
+            );
+          },
+        )
       ],
     );
   }
