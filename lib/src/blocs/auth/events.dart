@@ -34,6 +34,27 @@ class Register extends AuthEvent {
   String toString() => "User is registering";
 }
 
+/// The event emitted when the user clicks the password reset button
+class PasswordResetAttempt extends AuthEvent {
+  @override
+  String toString() => "User is attempting to reset password";
+}
+
+/// The event emitted when the user presses the submit button after
+/// providing the email to reset the password
+class PasswordResetSubmit extends AuthEvent {
+ final String email;
+
+  PasswordResetSubmit({@required this.email}) : super([email]);
+
+  String toString() => "The password reset email is being sent";
+}
+
+/// A back event which will lead to the login form
+class Back extends AuthEvent {
+  String toString() => "Returning back to login form";
+}
+
 /// The event emitted when the user attempts to logs out
 class LogOut extends AuthEvent {
   @override

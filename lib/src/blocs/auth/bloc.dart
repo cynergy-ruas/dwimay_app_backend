@@ -111,6 +111,42 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     }
 
+    // if the user is trying to reset password
+    else if (event is PasswordResetAttempt) {
+
+      // yeilding form
+      yield AuthPasswordReset();
+    }
+
+    // if the user submits the email to reset the password
+    else if (event is PasswordResetSubmit) {
+      yield AuthLoading();
+
+      try {
+        // attempting to send password reset mail
+        await _auth.sendPasswordResetEmail(email: event.email);
+
+        // yielding state to show success message
+        yield AuthPasswordResetSuccess();
+
+        // yielding login form
+        yield AuthInvalid();
+      }
+
+      catch (e) {
+        // yielding error state
+        yield AuthError(exception: e);
+        
+        // yielding login form
+        yield AuthInvalid();
+      }
+    }
+
+    // The back button is pressed to go back to the login form
+    else if (event is Back) {
+      yield AuthInvalid();
+    }
+
     // if the user is trying to log out
     else {
       // yield loading state
@@ -134,5 +170,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   /// Logs the user out.
   void logout() => this.add(LogOut());
-  
+
+  /// starts the password reset process
+  void startResetPassword() => this.add(PasswordResetAttempt());
+
+  /// attempts a password reset submission
+  void resetPassword({@required String email}) => this.add(PasswordResetSubmit(email: email));
+
+  /// goes back to login form
+  void showLoginForm() => this.add(Back());
 }

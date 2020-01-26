@@ -22,15 +22,29 @@ class LoginWidget extends StatefulWidget {
   /// The login UI
   final Widget loginForm;
 
+  /// The form for the password reset email
+  final Widget passwordResetForm;
+
   /// Callback to execute when login error occurs.
   final void Function(BuildContext, dynamic) onError;
+
+  /// Callback to execute when the password reset is successful
+  final void Function(BuildContext) onPasswordResetSuccess;
 
   /// The bloc to use
   final AuthBloc bloc;
 
-  LoginWidget({Key key, this.onUninitialized, @required this.loginForm, @required this.onLoading,
-               @required this.onSuccess, @required this.onError, @required this.bloc})
-  : super(key: key);
+  LoginWidget({
+    Key key,
+    this.onUninitialized, 
+    this.passwordResetForm,
+    this.onPasswordResetSuccess,
+    @required this.loginForm, 
+    @required this.onLoading,
+    @required this.onSuccess, 
+    @required this.onError,
+    @required this.bloc
+  }) : super(key: key);
 
   @override
   LoginWidgetState createState() => LoginWidgetState();
@@ -43,7 +57,9 @@ class LoginWidgetState extends State<LoginWidget> {
   Widget get onLoading => widget.onLoading;
   Widget get onSuccess => widget.onSuccess;
   Widget get loginForm => widget.loginForm;
+  Widget get passwordResetForm => widget.passwordResetForm;
   void Function(BuildContext, dynamic) get onError => widget.onError;
+  void Function(BuildContext) get onPasswordResetSuccess => widget.onPasswordResetSuccess;
 
   @override
   void initState() {
@@ -56,12 +72,16 @@ class LoginWidgetState extends State<LoginWidget> {
     return BlocListener<AuthBloc, AuthState>(
       bloc: widget.bloc,
 
-      // listening for errors.
+      // listening for errors and password reset success
       listener: (BuildContext context, AuthState state) {
         // if there is an error,
         if (state is AuthError)
           // execute [onError] callback
           onError(context, state.exception);
+
+        // if a password reset was successful
+        if (state is AuthPasswordResetSuccess)
+          onPasswordResetSuccess?.call(context);
       },
 
       child: BlocBuilder<AuthBloc, AuthState>(
@@ -86,6 +106,12 @@ class LoginWidgetState extends State<LoginWidget> {
           // [onSuccess] widget
           else if (state is AuthValid) {
             child = onSuccess;
+          }
+
+          // if the user presses the password reset button,
+          // navigate to the form
+          else if (state is AuthPasswordReset) {
+            child = passwordResetForm;
           }
 
           // loading screen

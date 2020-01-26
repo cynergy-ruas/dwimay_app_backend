@@ -27,6 +27,17 @@ class AuthLoading extends AuthState {
   String toString() => "AuthLoading";
 }
 
+/// The state when the user presses the password rest button,
+/// the password reset form
+class AuthPasswordReset extends AuthState {
+  String toString() => "AuthPasswordReset";
+}
+
+/// The state when the password reset is successful
+class AuthPasswordResetSuccess extends AuthState {
+  String toString() => "AuthPasswordResetSuccess";
+}
+
 /// The state when an error occurs while logging in
 class AuthError extends AuthState {
   final exception;

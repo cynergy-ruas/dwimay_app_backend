@@ -57,6 +57,11 @@ class LoginAuth {
     );
   }
 
+  /// Sends the password reset email
+  Future<dynamic> sendPasswordResetEmail({@required String email}) async {
+    await _firebaseAuth.sendPasswordResetEmail(email: email);
+  }
+
   /// Gets an instance of this class. Only one
   /// instance of this class should exist.
   static LoginAuth getInstance() {
