@@ -1,4 +1,5 @@
 import 'package:dwimay_backend/dwimay_backend.dart';
+import 'package:dwimay_backend/src/services/database.dart';
 
 import 'states.dart';
 import 'events.dart';
@@ -63,6 +64,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         // setting claims
         User.instance.setClaims(await _auth.getClaims());
 
+        // getting the registered events for a user
+        User.instance.regEventIDs = await (await Database.instance).getRegisteredEventsForUser(email: User.instance.getEmailID());
+
         // subscribing user to events based on clearance levels
         _subscribeOrUnsubscribeFromEvents(notificationBloc.subscribe);
 
@@ -101,6 +105,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
           // setting claims
           User.instance.setClaims(await _auth.getClaims());
+
+          // getting the registered events for a user
+          User.instance.regEventIDs = await (await Database.instance).getRegisteredEventsForUser(email: User.instance.getEmailID());
 
           // subscribing user to events based on clearance levels
           _subscribeOrUnsubscribeFromEvents(notificationBloc.subscribe);
