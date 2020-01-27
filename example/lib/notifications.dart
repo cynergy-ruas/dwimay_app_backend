@@ -117,7 +117,8 @@ class PublishButton extends StatelessWidget {
       child: Text("Publish Notification"),
       onPressed: () {
         CloudFunctions.instance.publishNotification(
-          topic: "t12",
+          eventId: "t12",
+          departmentid: "something",
           announcement: Announcement.fromRaw(
             title: "Title!",
             body: "Body!!",

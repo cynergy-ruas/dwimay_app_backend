@@ -29,7 +29,7 @@ class CloudFunctions {
 
   /// Publishes a notification
   Future<dynamic> publishNotification(
-    {@required String topic, @required Announcement announcement}) async {
+    {@required String eventId, @required String departmentid, @required Announcement announcement}) async {
     // getting reference to cloud function
     final f.HttpsCallable publishNotification = f.CloudFunctions.instance.getHttpsCallable(
       functionName: "publishNotification"
@@ -37,7 +37,8 @@ class CloudFunctions {
 
     // calling the function with the data
     f.HttpsCallableResult response = await publishNotification.call({
-      "topic": topic,
+      "eventid": eventId,
+      "department": departmentid,
       "title": announcement.title,
       "body": announcement.body,
       "data": announcement.data
