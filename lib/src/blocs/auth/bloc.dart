@@ -1,3 +1,5 @@
+import 'package:dwimay_backend/dwimay_backend.dart';
+
 import 'states.dart';
 import 'events.dart';
 import 'package:bloc/bloc.dart';
@@ -12,10 +14,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   LoginAuth _auth = LoginAuth.getInstance();
 
-  /// Function to get the device token
-  final String Function() getDeviceToken;
+  final NotificationBloc notificationBloc;
 
-  AuthBloc({@required this.getDeviceToken});
+  AuthBloc({@required this.notificationBloc});
 
   @override
   AuthState get initialState => AuthUninitialized();
@@ -62,6 +63,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         // setting claims
         User.instance.setClaims(await _auth.getClaims());
 
+        // subscribing user to events based on clearance levels
+        _subscribeOrUnsubscribeFromEvents(notificationBloc.subscribe);
+
         // yield [AuthValid] state
         yield AuthValid();
       }
@@ -97,6 +101,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
           // setting claims
           User.instance.setClaims(await _auth.getClaims());
+
+          // subscribing user to events based on clearance levels
+          _subscribeOrUnsubscribeFromEvents(notificationBloc.subscribe);
 
           // yielding event to show the home page
           yield AuthValid();
@@ -155,9 +162,36 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       // logging out
       await _auth.logout();
 
+      // unsubscribing user to events based on clearance levels
+      _subscribeOrUnsubscribeFromEvents(notificationBloc.unsubscribe);
+
       // yield [AuthInvalid] state
       yield AuthInvalid();
     }
+  }
+
+  /// Subscribes user to events based on clearance levels
+  void _subscribeOrUnsubscribeFromEvents(void Function({String topic}) action) {
+    // subscribing user to events based on clearance level
+    // if the user is a normal user
+    if (User.instance.getClearanceLevel() == 0) {
+      for (String id in User.instance.regEventIDs)
+       action(topic: id);
+    }
+
+    // if the user is a level 1 (coordinator/volunteer) or a level 2 (lead)
+    else if (User.instance.getClearanceLevel() == 1 || User.instance.getClearanceLevel() == 2)
+      action(topic: User.instance.getEventId());
+
+    // if the user is a level 3+ user
+    else {
+      for (Department dep in Department.values) 
+        action(topic: dep.id);
+      
+    }
+
+    // subscribing to general topic
+    action(topic: "general");
   }
 
   /// Logs the user in.
