@@ -31,7 +31,8 @@ class Database {
 
   /// Gets the list of registered events event IDs for a user
   Future<List<String>> getRegisteredEventsForUser({@required String email}) async =>
-    List<String>.from((await _firestore.collection("users").document(email).get()).data['regEvents']);
+    List<String>.from(((await _firestore.collection("users").document(email).get()).data ?? const {})["regEvents"] ?? []);
+  
   
 
   /// Deletes the [event] from firestore.
