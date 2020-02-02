@@ -108,7 +108,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
       catch (e) {
         // yeilding error
-        yield AuthError(exception: (e.runtimeType == AuthenticationError) ? e : Exception());
+        yield AuthError(exception: e);
 
         // logging the user out incase they somehow signed in.
         _auth.logout();
