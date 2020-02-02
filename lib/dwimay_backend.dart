@@ -4,8 +4,9 @@ export 'package:dwimay_backend/src/blocs/event/bloc.dart';
 export 'package:dwimay_backend/src/blocs/auth/bloc.dart';
 export 'package:dwimay_backend/src/blocs/notifications/bloc.dart';
 export 'package:dwimay_backend/src/blocs/bloc_delegate.dart';
-
 export 'package:dwimay_backend/src/blocs/event/events.dart';
+
+export 'package:dwimay_backend/src/services/auth.dart' hide LoginAuth;
 
 export 'package:dwimay_backend/src/models/events_model.dart';
 export 'package:dwimay_backend/src/models/user_model.dart';
