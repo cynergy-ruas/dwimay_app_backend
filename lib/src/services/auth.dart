@@ -31,7 +31,7 @@ class LoginAuth {
     // checking if the user document exists. If it exists, that means the user has paid for
     // atleast one event, and thus, can register.
     if (await (await Database.instance).exists(document: email, collection: "users")) {
-      await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+      _currentUser = (await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password)).user;
     }
     else {
       throw AuthenticationError("user has not paid for an event.");
