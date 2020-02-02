@@ -1,3 +1,4 @@
+import 'package:dwimay_backend/src/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
@@ -21,6 +22,20 @@ class LoginAuth {
     // logging the user in
     _currentUser = (await _firebaseAuth.signInWithEmailAndPassword(
         email: email, password: password)).user;
+  }
+
+  /// Registers the user, If the user document exists in firestore
+  Future<void> register({@required String email, @required String password}) async {
+    if (email == "" || password == "") throw PlatformException;
+
+    // checking if the user document exists. If it exists, that means the user has paid for
+    // atleast one event, and thus, can register.
+    if (await (await Database.instance).exists(document: email, collection: "users")) {
+      await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+    }
+    else {
+      throw AuthenticationError("user has not paid for an event.");
+    }
   }
 
   /// Logs the user out.
@@ -70,4 +85,11 @@ class LoginAuth {
     }
     return instance;
   }
+}
+
+/// class that represents an authentication error
+class AuthenticationError implements Exception {
+  final String message;
+
+  AuthenticationError([this.message]);
 }

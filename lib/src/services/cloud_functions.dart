@@ -63,31 +63,16 @@ class CloudFunctions {
     return response.data;
   }
 
-  /// Registers a user
-  Future<bool> registerUser({@required String email, @required String password}) async {
+  /// Sets the FCM token for a user
+  Future<void> setFCMToken({@required String email, @required String token}) async {
     // getting reference to cloud function
-    final f.HttpsCallable registerUser = f.CloudFunctions.instance.getHttpsCallable(
-      functionName: "registerUser"
-    );
+    final f.HttpsCallable setFCMToken = f.CloudFunctions.instance.getHttpsCallable(functionName: "setFCMToken");
 
-    // calling the function with the data and getting the response
-    try {
-      await registerUser.call({
-        "emailid": email,
-        "password": password,
-      });
-
-      // returning true, indicating that the registration was successful.
-      return true;
-    }
-    on f.CloudFunctionsException catch (e) {
-      print(e);
-      return false;
-    }
-    catch(e) {
-      print(e);
-      return false;
-    }
+    // calling the function with the data
+    return await setFCMToken.call({
+      "emailid": email,
+      "token": token
+    });
   }
 
   static CloudFunctions get instance {

@@ -57,6 +57,10 @@ class Database {
     });
   }
 
+  /// Checks if the [document] in the [collection] exists or not
+  Future<bool> exists({@required String document, @required String collection}) async => 
+    (await _firestore.collection(collection).document(document).get()).exists;
+
   /// Gets an instance of this class. Only one instance of this class should 
   /// exists. Also performs some initialization.
   static Future<Database> get instance async {

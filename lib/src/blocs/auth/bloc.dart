@@ -1,4 +1,5 @@
-import 'package:dwimay_backend/dwimay_backend.dart';
+import 'package:dwimay_backend/src/blocs/notifications/bloc.dart';
+import 'package:dwimay_backend/src/models/events_model.dart';
 import 'package:dwimay_backend/src/services/database.dart';
 
 import 'states.dart';
@@ -7,7 +8,6 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:dwimay_backend/src/services/auth.dart';
 import 'package:dwimay_backend/src/models/user_model.dart';
-import 'package:dwimay_backend/src/services/cloud_functions.dart';
 
 // Defining the Bloc. Logic goes here
 
@@ -43,6 +43,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         // if the user is logged in, set the claims
         user.setClaims(await _auth.getClaims());
 
+
+
         // yield [AuthValid] state
         yield AuthValid();
       }
@@ -76,6 +78,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       catch (e) {
         // error occured while logging in, yield [AuthError] state
         yield AuthError(exception: e);
+
+        // logging the user out incase they somehow signed in.
+        _auth.logout();
+
         // yielding [AuthInvalid] state
         yield AuthInvalid();
       }
@@ -85,43 +91,30 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       // yielding loading state
       yield AuthLoading();
 
-      // attempt registration
-      bool res = await CloudFunctions.instance.registerUser(email: event.email, password: event.password);
+      try {
+        await _auth.register(email: event.email, password: event.password);
 
-      // if the registration was unsuccessful, then
-      if (! res) {
+        // setting claims
+        User.instance.setClaims(await _auth.getClaims());
 
-        // yielding error event
-        yield AuthError(exception: Exception("User has not paid for an event."));
+        // getting the registered events for a user
+        User.instance.regEventIDs = await (await Database.instance).getRegisteredEventsForUser(email: User.instance.getEmailID());
+
+        // subscribing user to events based on clearance levels
+        _subscribeOrUnsubscribeFromEvents(notificationBloc.subscribe);
+
+        // yielding event to show the home page
+        yield AuthValid();
+      }
+      catch (e) {
+        // yeilding error
+        yield AuthError(exception: (e.runtimeType == AuthenticationError) ? e : Exception());
+
+        // logging the user out incase they somehow signed in.
+        _auth.logout();
 
         // yielding login screen
         yield AuthInvalid();
-      }
-      else {
-        
-        try {
-          // logging the user in
-          await _auth.login(email: event.email, password: event.password);
-
-          // setting claims
-          User.instance.setClaims(await _auth.getClaims());
-
-          // getting the registered events for a user
-          User.instance.regEventIDs = await (await Database.instance).getRegisteredEventsForUser(email: User.instance.getEmailID());
-
-          // subscribing user to events based on clearance levels
-          _subscribeOrUnsubscribeFromEvents(notificationBloc.subscribe);
-
-          // yielding event to show the home page
-          yield AuthValid();
-        }
-        catch (e) {
-          // yielding the event to show the error
-          yield AuthError(exception: e);
-
-          // yielding the event to show the login screen
-          yield AuthInvalid();
-        }
       }
     }
 
