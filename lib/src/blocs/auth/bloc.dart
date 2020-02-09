@@ -43,14 +43,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         // if the user is logged in, set the claims
         user.setClaims(await _auth.getClaims());
 
-
+        User.instance.isLoggedIn = true;
 
         // yield [AuthValid] state
         yield AuthValid();
       }
-      else
+      else {
+        User.instance.isLoggedIn = false;
+
         // user has not logged in, yield AuthInvalid
         yield AuthInvalid();
+      }
     }
 
     // if the user is trying to log in
@@ -72,6 +75,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         // subscribing user to events based on clearance levels
         _subscribeOrUnsubscribeFromEvents(notificationBloc.subscribe);
 
+        User.instance.isLoggedIn = true;
+
         // yield [AuthValid] state
         yield AuthValid();
       }
@@ -81,6 +86,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
         // logging the user out incase they somehow signed in.
         _auth.logout();
+
+        User.instance.isLoggedIn = false;
 
         // yielding [AuthInvalid] state
         yield AuthInvalid();
@@ -103,6 +110,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         // subscribing user to events based on clearance levels
         _subscribeOrUnsubscribeFromEvents(notificationBloc.subscribe);
 
+        User.instance.isLoggedIn = true;
+
         // yielding event to show the home page
         yield AuthValid();
       }
@@ -112,6 +121,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
         // logging the user out incase they somehow signed in.
         _auth.logout();
+
+        User.instance.isLoggedIn = false;
 
         // yielding login screen
         yield AuthInvalid();

@@ -9,6 +9,9 @@ class User {
   /// The registered events of the user
   List<String> regEventIDs;
 
+  /// Boolean which specifies whether the user is logged in or not
+  bool isLoggedIn = false;
+
   /// The instance of this class
   static User _instance;
 
