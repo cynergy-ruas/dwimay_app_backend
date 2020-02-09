@@ -53,7 +53,8 @@ class Database {
       "name": event.name,
       "speaker": event.speaker,
       "type": event.type,
-      "venue": event.venue,    
+      "venue": event.venue,
+      "registrationLink": event.registrationLink   
     });
   }
 

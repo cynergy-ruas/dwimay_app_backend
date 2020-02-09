@@ -29,6 +29,9 @@ class Event {
   /// The venue of the event.
   String venue;
 
+  /// The registration link
+  String registrationLink;
+
   /// The document id of the firebase document containing
   /// the event's information.
   String documentID;
@@ -42,6 +45,7 @@ class Event {
     @required this.speaker,
     @required this.type,
     @required this.venue,
+    this.registrationLink,
     this.documentID
   });
 

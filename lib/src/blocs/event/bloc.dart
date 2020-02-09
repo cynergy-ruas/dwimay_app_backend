@@ -41,7 +41,8 @@ class EventLoadBloc extends Bloc<DataLoadEvent, DataLoadState>{
           name: event.name,
           speaker: event.speaker,
           type: event.type,
-          venue: event.venue
+          venue: event.venue,
+          registrationLink: event.registrationLink
         );
 
         yield DataLoadComplete();
@@ -91,6 +92,7 @@ class EventLoadBloc extends Bloc<DataLoadEvent, DataLoadState>{
         speaker: data[i]["speaker"],
         type: data[i]["type"],
         venue: data[i]["venue"],
+        registrationLink: data[i]["registrationLink"],
         documentID: data[i]["docRef"]
       ));
     }
@@ -98,7 +100,7 @@ class EventLoadBloc extends Bloc<DataLoadEvent, DataLoadState>{
 
   /// Updates an event referenced by [documentID] with the values given as arguments.
   Future<void> _updateEvent({@required Event event, List<DateTime> datetimes, String department,
-    String description, String name, String speaker, String type, String venue}) async {
+    String description, String name, String speaker, String type, String venue, String registrationLink}) async {
       
     // modifying event object if the given parameter is not null
     // and if its not same as the old one.
@@ -116,6 +118,8 @@ class EventLoadBloc extends Bloc<DataLoadEvent, DataLoadState>{
       event.type = type;
     if (venue != null && event.venue != venue)
       event.venue = venue;
+    if (registrationLink != null && event.registrationLink != registrationLink)
+      event.registrationLink = registrationLink;
 
     // getting instance of database
     Database db = await Database.instance;

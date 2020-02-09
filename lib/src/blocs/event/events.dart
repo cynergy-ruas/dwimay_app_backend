@@ -24,6 +24,7 @@ class UpdateData extends DataLoadEvent {
   final String speaker;
   final String type;
   final String venue;
+  final String registrationLink;
 
   UpdateData({
     @required this.event,
@@ -33,7 +34,8 @@ class UpdateData extends DataLoadEvent {
     @required this.name,
     @required this.speaker, 
     @required this.type,
-    @required this.venue
+    @required this.venue,
+    @required this.registrationLink,
   });
 
   @override
