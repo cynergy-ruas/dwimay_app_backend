@@ -24,6 +24,7 @@ export 'package:dwimay_backend/src/widgets/registered_events_loader.dart';
 export 'package:dwimay_backend/src/widgets/users_loader_widget.dart';
 
 export 'package:dwimay_backend/src/services/cloud_functions.dart';
+export 'package:dwimay_backend/src/services/townscript.dart';
 
 export 'package:qr_flutter/qr_flutter.dart';
 export 'package:overlay_support/overlay_support.dart';
