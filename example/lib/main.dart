@@ -3,6 +3,7 @@ import 'package:example/event_load.dart';
 import 'package:example/login.dart';
 import 'package:example/notifications.dart';
 import 'package:example/qr.dart';
+import 'package:example/user_info_load.dart';
 import 'package:flutter/material.dart';
 import 'package:bloc/bloc.dart';
 
@@ -17,6 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // adding the backend provider
     return BackendProvider(
+      townscriptAPIToken: "eyJhbGciOiJIUzUxMiJ9.eyJST0xFIjoiUk9MRV9VU0VSIiwic3ViIjoic2h5YW1hbnQuYWNoYXJAZ21haWwuY29tIiwiYXVkaWVuY2UiOiJ3ZWIiLCJjcmVhdGVkIjoxNTgxMTYwNzAwMjE2LCJVU0VSX0lEIjoxOTA2MzAxLCJleHAiOjE1ODg5MzY3MDB9.xStPTuyUvqIAZx6fgAMq8o_nvAQo7r3Hkq6_XUFQPdHLvvKfTVxl3cnPFVZx4bV-YptBOacnqDOoY-Iv2_tmqg",
       onMessage: (BuildContext context, Map<String, dynamic> message) {
         // showing overlay
         return SafeArea(
@@ -94,6 +96,19 @@ class HomePage extends StatelessWidget {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => QrExample()
+                        )
+                      );
+                    },
+                  ),
+
+                  SizedBox(height: 30,),
+                  
+                  RaisedButton(
+                    child: Text("Townscript API example"),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => UserInfoLoadExample()
                         )
                       );
                     },

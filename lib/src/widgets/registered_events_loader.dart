@@ -77,7 +77,7 @@ class _RegisteredEventsLoaderState extends State<RegisteredEventsLoader> {
             _body = widget.onLoaded(context, User.instance.regEventIDs);
 
           return AnimatedSwitcher(
-            duration: Duration(milliseconds: 500),
+            duration: Duration(milliseconds: 250),
             child: _body,
           );
         },

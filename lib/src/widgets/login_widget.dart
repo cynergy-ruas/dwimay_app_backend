@@ -120,7 +120,7 @@ class LoginWidgetState extends State<LoginWidget> {
           }
 
           return AnimatedSwitcher(
-            duration: Duration(milliseconds: 500),
+            duration: Duration(milliseconds: 250),
             child: child
           );
         },

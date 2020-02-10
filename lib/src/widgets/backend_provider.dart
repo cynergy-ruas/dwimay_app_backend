@@ -1,6 +1,7 @@
 import 'package:dwimay_backend/src/blocs/auth/bloc.dart';
 import 'package:dwimay_backend/src/blocs/event/bloc.dart';
 import 'package:dwimay_backend/src/blocs/notifications/bloc.dart';
+import 'package:dwimay_backend/src/services/townscript.dart';
 import 'package:flutter/material.dart' hide NotificationListener;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc/bloc.dart';
@@ -22,7 +23,10 @@ class BackendProvider extends StatefulWidget {
   /// Builder function that builds the UI when a notification arrives
   final void Function(BuildContext, Map<String, dynamic>) onMessage;
 
-  BackendProvider({@required this.child, @required this.onMessage, this.notificationListeners = const []});
+  BackendProvider({@required this.child, @required this.onMessage, String townscriptAPIToken, this.notificationListeners = const []}) {
+    TownscriptAPI.init(townscriptAPIToken);
+  }
+  
 
   @override
   _BackendProviderState createState() => _BackendProviderState();

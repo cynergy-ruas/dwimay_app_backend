@@ -101,7 +101,7 @@ class EventLoaderState extends State<EventLoader> {
             child = onLoaded(EventPool.events);
 
           return AnimatedSwitcher(
-            duration: Duration(milliseconds: 500),
+            duration: Duration(milliseconds: 250),
             child: child,
           );
         },
