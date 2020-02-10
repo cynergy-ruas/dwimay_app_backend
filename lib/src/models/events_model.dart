@@ -142,6 +142,7 @@ enum Department {
   AerospaceAndAutomotive,
   All,
   ComputerScience,
+  Civil,
   Design,
   ElectricAndElectronics,
   Mechanical,
@@ -165,6 +166,11 @@ extension DepartmentExtras on Department {
     Department.ComputerScience: {
       "id": "CSE",
       "name": "Computer Science",
+    },
+
+    Department.Civil: {
+      "id": "CE",
+      "name": "Civil"
     },
 
     Department.Design: {
