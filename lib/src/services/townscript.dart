@@ -1,7 +1,10 @@
 import 'package:dwimay_backend/src/models/attendee_info_model.dart';
+import 'package:dwimay_backend/src/models/pass_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 import 'dart:convert';
+
+import 'database.dart';
 
 /// Singleton class that handles communication with townscript API
 class TownscriptAPI {
@@ -18,23 +21,55 @@ class TownscriptAPI {
   TownscriptAPI._();
 
   /// gets all the registered users of an event
-  Future<List<AttendeeInfo>> getRegisteredUsers({@required String eventCode}) async {
+  Future<List<AttendeeInfo>> getRegisteredUsers({@required String eventCode, bool includePasses = false}) async {
+
+    // initializing the list of [AttendeeInfo]
+    List<AttendeeInfo> attendeeInfo = List<AttendeeInfo>();
+
+    // get request headers
+    Map<String, String> headers = {
+      "Authorization": _token,
+    };
+
+    // getting the attendee info of the event
     http.Response res = await http.get(
       "https://www.townscript.com/api/registration/getRegisteredUsers?eventCode=$eventCode",
-      headers: {
-        "Authorization": _token
-      }
+      headers: headers
     );
 
+    // extracting info and adding as [AttendeeInfo] objects
+    _extractAndAdd(res, attendeeInfo);
+
+    if (includePasses) {
+      // getting the passes from firestore
+      List<Pass> passes = await (await Database.instance).getPasses();
+
+      for (Pass pass in passes) {
+        // getting the attendee info of the pass
+        http.Response res = await http.get(
+          "https://www.townscript.com/api/registration/getRegisteredUsers?eventCode=${pass.id}",
+          headers: headers
+        );
+
+        // extracting info and adding as [AttendeeInfo] objects
+        _extractAndAdd(res, attendeeInfo);
+      }
+    }
+
+    return attendeeInfo;
+  }
+
+  /// Extracts the attendee info from [res] and adds it to the [list]
+  void _extractAndAdd(http.Response res, List<AttendeeInfo> list) {
     try {    
       // when there is more than one registration, townscript sends a list
       // hence, converting each item in list into [AttendeeInfo]
-      return List<AttendeeInfo>.from(json.decode(json.decode(res.body)["data"]).map((entry) => AttendeeInfo.fromJson(entry)));
+      list.addAll(List<AttendeeInfo>.from(json.decode(json.decode(res.body)["data"]).map((entry) => AttendeeInfo.fromJson(entry))));
     }
     catch (e) {
       // if there is one registration, townscript sends a dictionary. hence,
       // converting the dictionary to [AttendeeInfo] and adding it in a list
-      return <AttendeeInfo>[AttendeeInfo.fromJson(json.decode(json.decode(res.body)["data"]))];
+      list.add(AttendeeInfo.fromJson(json.decode(json.decode(res.body)["data"])));
     }
   }
 

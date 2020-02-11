@@ -27,7 +27,20 @@ class UsersLoaderWidget extends StatefulWidget {
   /// Boolean that defines whether data load should happen immediately
   final bool beginLoad;
 
-  UsersLoaderWidget({Key key, @required this.onLoaded, this.onLoading, this.onUninitialized, this.onError, this.eventId, this.beginLoad = true})
+  /// Boolean that defines whether attendee information about the passes
+  /// should also be loaded
+  final bool includePasses;
+
+  UsersLoaderWidget({
+    Key key,
+    @required this.onLoaded,
+    this.onLoading,
+    this.onUninitialized,
+    this.onError,
+    this.eventId,
+    this.beginLoad = true,
+    this.includePasses = false
+  })
     : assert(! (beginLoad == true && eventId == null)),
       super(key: key);
 
@@ -48,7 +61,7 @@ class UsersLoaderWidgetState extends State<UsersLoaderWidget> {
 
     // starting load if defined so
     if (widget.beginLoad)
-      _bloc.add(BeginUserDataLoad(eventCode: widget.eventId));
+      _bloc.add(BeginUserDataLoad(eventCode: widget.eventId, includePasses: widget.includePasses));
 
   }
 
@@ -88,8 +101,8 @@ class UsersLoaderWidgetState extends State<UsersLoaderWidget> {
     );
   }
 
-  void beginLoadingData({@required String eventId}) =>
-    _bloc.add(BeginUserDataLoad(eventCode: eventId));
+  void beginLoadingData({@required String eventId, bool includePasses = false}) =>
+    _bloc.add(BeginUserDataLoad(eventCode: eventId, includePasses: includePasses));
 
   @override
   void dispose() {

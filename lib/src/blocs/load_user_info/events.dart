@@ -9,9 +9,13 @@ abstract class UserDataLoadEvent extends Equatable {
 /// The event emitted when data loading is initiated
 class BeginUserDataLoad extends UserDataLoadEvent {
   
+  /// The id of the event who's data is to be loaded
   final String eventCode;
 
-  BeginUserDataLoad({@required this.eventCode});
+  /// Defining whether to include passes or not
+  final bool includePasses;
+
+  BeginUserDataLoad({@required this.eventCode, @required this.includePasses});
 
   @override
   String toString() => "BeginDataLoad";

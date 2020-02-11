@@ -19,7 +19,7 @@ class UserInfoLoadBloc extends Bloc<UserDataLoadEvent, DataLoadState>{
 
       try {
         // loading user data from townscript
-        List<AttendeeInfo> data = await TownscriptAPI.instance.getRegisteredUsers(eventCode: event.eventCode);
+        List<AttendeeInfo> data = await TownscriptAPI.instance.getRegisteredUsers(eventCode: event.eventCode, includePasses: event.includePasses);
 
 
         // yielding load complete state

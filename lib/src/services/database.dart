@@ -1,4 +1,5 @@
 import 'package:dwimay_backend/src/models/events_model.dart';
+import 'package:dwimay_backend/src/models/pass_model.dart';
 import 'package:meta/meta.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -61,6 +62,18 @@ class Database {
   /// Checks if the [document] in the [collection] exists or not
   Future<bool> exists({@required String document, @required String collection}) async => 
     (await _firestore.collection(collection).document(document).get()).exists;
+
+  /// Gets all the passes from firestore
+  Future<List<Pass>> getPasses() async =>
+    (await _firestore.collection("passes").getDocuments()).documents
+    .where(
+      (DocumentSnapshot doc) => doc.documentID != "template"
+    )
+    .map(
+      (DocumentSnapshot doc) =>
+        Pass.fromJson(Map<String, String>.from(doc.data))
+    )
+    .toList();
 
   /// Gets an instance of this class. Only one instance of this class should 
   /// exists. Also performs some initialization.
