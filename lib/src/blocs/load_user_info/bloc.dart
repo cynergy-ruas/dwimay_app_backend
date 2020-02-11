@@ -1,3 +1,5 @@
+import 'package:dwimay_backend/src/models/attendee_info_model.dart';
+
 import 'events.dart';
 import 'states.dart';
 import 'package:bloc/bloc.dart';
@@ -17,7 +19,7 @@ class UserInfoLoadBloc extends Bloc<UserDataLoadEvent, DataLoadState>{
 
       try {
         // loading user data from townscript
-        List<String> data = await TownscriptAPI.instance.getRegisteredUsers(eventCode: event.eventCode);
+        List<AttendeeInfo> data = await TownscriptAPI.instance.getRegisteredUsers(eventCode: event.eventCode);
 
 
         // yielding load complete state

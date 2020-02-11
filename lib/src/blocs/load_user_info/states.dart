@@ -1,3 +1,4 @@
+import 'package:dwimay_backend/src/models/attendee_info_model.dart';
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 
@@ -29,7 +30,7 @@ class DataLoadError extends DataLoadState {
 /// The state when data loading is complete
 class DataLoadComplete extends DataLoadState {
 
-  final List<String> data;
+  final List<AttendeeInfo> data;
 
   DataLoadComplete({@required this.data}) : super();
   String toString() => "DataLoadComplete";

@@ -1,3 +1,4 @@
+import 'package:dwimay_backend/src/models/attendee_info_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 import 'dart:convert';
@@ -17,15 +18,24 @@ class TownscriptAPI {
   TownscriptAPI._();
 
   /// gets all the registered users of an event
-  Future<List<String>> getRegisteredUsers({@required String eventCode}) async {
+  Future<List<AttendeeInfo>> getRegisteredUsers({@required String eventCode}) async {
     http.Response res = await http.get(
       "https://www.townscript.com/api/registration/getRegisteredUsers?eventCode=$eventCode",
       headers: {
         "Authorization": _token
       }
     );
-    
-    return List<String>.from(json.decode(json.decode(res.body)["data"]).map((datum) => datum["registrationId"].toString()));
+
+    try {    
+      // when there is more than one registration, townscript sends a list
+      // hence, converting each item in list into [AttendeeInfo]
+      return List<AttendeeInfo>.from(json.decode(json.decode(res.body)["data"]).map((entry) => AttendeeInfo.fromJson(entry)));
+    }
+    catch (e) {
+      // if there is one registration, townscript sends a dictionary. hence,
+      // converting the dictionary to [AttendeeInfo] and adding it in a list
+      return <AttendeeInfo>[AttendeeInfo.fromJson(json.decode(json.decode(res.body)["data"]))];
+    }
   }
 
   /// Used to set the token

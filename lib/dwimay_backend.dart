@@ -13,6 +13,7 @@ export 'package:dwimay_backend/src/services/auth.dart' hide LoginAuth;
 export 'package:dwimay_backend/src/models/events_model.dart';
 export 'package:dwimay_backend/src/models/user_model.dart';
 export 'package:dwimay_backend/src/models/announcement_model.dart';
+export 'package:dwimay_backend/src/models/attendee_info_model.dart';
 
 export 'package:dwimay_backend/src/widgets/event_loader.dart';
 export 'package:dwimay_backend/src/widgets/login_widget.dart';

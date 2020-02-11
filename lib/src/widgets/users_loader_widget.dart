@@ -1,6 +1,7 @@
 import 'package:dwimay_backend/src/blocs/load_user_info/bloc.dart';
 import 'package:dwimay_backend/src/blocs/load_user_info/events.dart';
 import 'package:dwimay_backend/src/blocs/load_user_info/states.dart';
+import 'package:dwimay_backend/src/models/attendee_info_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,7 +22,7 @@ class UsersLoaderWidget extends StatefulWidget {
   final void Function(BuildContext, dynamic) onError;
 
   /// Function to execute when data is loaded
-  final Widget Function(BuildContext, List<String>) onLoaded;
+  final Widget Function(BuildContext, List<AttendeeInfo>) onLoaded;
 
   /// Boolean that defines whether data load should happen immediately
   final bool beginLoad;

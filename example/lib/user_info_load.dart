@@ -29,11 +29,11 @@ class _UserInfoLoadExampleState extends State<UserInfoLoadExample> {
 
         onLoading: Center(child: CircularProgressIndicator(),),
 
-        onLoaded: (BuildContext context, List<String> data) =>
+        onLoaded: (BuildContext context, List<AttendeeInfo> data) =>
           ListView.builder(
             itemCount: data.length,
             itemBuilder: (BuildContext context, int index) => 
-              ListTile(title: Text(data[index]),),
+              ListTile(title: Text(data[index].registrationId),),
           )
       ),
     );
