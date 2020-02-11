@@ -36,9 +36,10 @@ class TownscriptAPI {
       "https://www.townscript.com/api/registration/getRegisteredUsers?eventCode=$eventCode",
       headers: headers
     );
-
-    // extracting info and adding as [AttendeeInfo] objects
-    _extractAndAdd(res, attendeeInfo);
+    
+    if (json.decode(res.body)["result"] != "Error")
+      // extracting info and adding as [AttendeeInfo] objects
+      _extractAndAdd(res, attendeeInfo);
 
     if (includePasses) {
       // getting the passes from firestore
