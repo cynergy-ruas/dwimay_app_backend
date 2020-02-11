@@ -22,4 +22,8 @@ class Pass {
     this.description = json["description"];
     this.registrationLink = json["registrationLink"];
   }
+
+  @override
+  String toString() =>
+    "Pass[name: $name]";
 }

@@ -11,7 +11,7 @@ class TownscriptFormAnswer {
   /// The id
   String id;
 
-  TownscriptFormAnswer.fromJson(Map<String, dynamic> json) {
+  TownscriptFormAnswer.fromJson(Map<String, String> json) {
     this.question = json["question"];
     this.answer = json["answer"];
     this.id = json["uniqueQuestionId"];

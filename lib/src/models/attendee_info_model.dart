@@ -22,7 +22,8 @@ class AttendeeInfo {
     this.email = json["userEmailId"];
     this.name = json["userName"];
     this.registrationId = json["registrationId"].toString();
-    this.answerList = json["answerList"].map((answer) => TownscriptFormAnswer.fromJson(answer));
+    this.answerList = List<TownscriptFormAnswer>.from(json["answerList"]?.map((answer) => TownscriptFormAnswer.fromJson(answer))?.toList() ?? []);
+    print("list: ${this.answerList}");
   }
 
   /// Gets all the answers of all the questions separated by [separator]

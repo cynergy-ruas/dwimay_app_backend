@@ -44,16 +44,21 @@ class TownscriptAPI {
       // getting the passes from firestore
       List<Pass> passes = await (await Database.instance).getPasses();
 
-      for (Pass pass in passes) {
-        // getting the attendee info of the pass
-        http.Response res = await http.get(
-          "https://www.townscript.com/api/registration/getRegisteredUsers?eventCode=${pass.id}",
-          headers: headers
-        );
+      // getting the attendee data for each of the passes
+      List<http.Response> responses = await Future.wait<http.Response>(
+        passes.map(
+          (pass) => http.get(
+            "https://www.townscript.com/api/registration/getRegisteredUsers?eventCode=${pass.id}",
+            headers: headers
+          )
+        ).toList()
+      );
 
-        // extracting info and adding as [AttendeeInfo] objects
-        _extractAndAdd(res, attendeeInfo);
-      }
+      // populating the [attendeeInfo] list
+      for (http.Response res in responses)
+        if (json.decode(json.decode(res.body)["data"]).length != 0)
+          // extracting info and adding as [AttendeeInfo] objects
+          _extractAndAdd(res, attendeeInfo);
     }
 
     return attendeeInfo;
