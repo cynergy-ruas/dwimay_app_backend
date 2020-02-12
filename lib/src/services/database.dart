@@ -35,8 +35,8 @@ class Database {
     List<String>.from(((await _firestore.collection("users").document(email).get()).data ?? const {})["regEvents"] ?? []);
   
   /// Gets the passes the user paid for.
-  Future<Map<String, List<dynamic>>> getPassesForUser({@required String email}) async =>
-    Map<String, List<dynamic>>.from(((await _firestore.collection("users").document(email).get()).data ?? const {})["passes"] ?? {});
+  Future<Map<String, dynamic>> getPassesForUser({@required String email}) async =>
+    Map<String, dynamic>.from(((await _firestore.collection("users").document(email).get()).data ?? const {})["passes"] ?? {});
 
   /// Deletes the [event] from firestore.
   Future<void> deleteEvent({@required Event event}) async {

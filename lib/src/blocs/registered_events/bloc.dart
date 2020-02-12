@@ -31,8 +31,10 @@ class RegisteredEventsBloc extends Bloc<RegEventsEvent, RegEventsState> {
         
         // loading pass information from firestore
         (await (await Database.instance).getPassesForUser(email: User.instance.getEmailID())).forEach(
-          (String id, List<dynamic> eventNames) => 
-            regEvents.add(RegisteredEvent(id: id, eventNames: List<String>.from(eventNames), isPass: true)) 
+          (String id, dynamic data) {
+            Map<String, dynamic> info = Map<String, dynamic>.from(data);
+            regEvents.add(RegisteredEvent(id: id, eventNames: List<String>.from(info["events"]), isPass: true, registrationId: info["id"].toString()));
+          }
         );
         
         

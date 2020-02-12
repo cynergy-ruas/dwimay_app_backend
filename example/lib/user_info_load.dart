@@ -22,7 +22,7 @@ class _UserInfoLoadExampleState extends State<UserInfoLoadExample> {
             child: Text("start"),
             onPressed: () {
               print(_key.currentState);
-              _key.currentState.beginLoadingData(eventId: "test-140110");
+              _key.currentState.beginLoadingData(eventId: "town-planning-001132", includePasses: true,);
             },
           ),
         ),

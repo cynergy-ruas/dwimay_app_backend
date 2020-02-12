@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // adding the backend provider
     return BackendProvider(
-      townscriptAPIToken: "eyJhbGciOiJIUzUxMiJ9.eyJST0xFIjoiUk9MRV9VU0VSIiwic3ViIjoic2h5YW1hbnQuYWNoYXJAZ21haWwuY29tIiwiYXVkaWVuY2UiOiJ3ZWIiLCJjcmVhdGVkIjoxNTgxMTYwNzAwMjE2LCJVU0VSX0lEIjoxOTA2MzAxLCJleHAiOjE1ODg5MzY3MDB9.xStPTuyUvqIAZx6fgAMq8o_nvAQo7r3Hkq6_XUFQPdHLvvKfTVxl3cnPFVZx4bV-YptBOacnqDOoY-Iv2_tmqg",
+      townscriptAPIToken: "eyJhbGciOiJIUzUxMiJ9.eyJST0xFIjoiUk9MRV9VU0VSIiwic3ViIjoiYWFkaHlhcnVhc0BnbWFpbC5jb20iLCJhdWRpZW5jZSI6IndlYiIsImNyZWF0ZWQiOjE1ODEzNDg2NTMyNzksIlVTRVJfSUQiOjE5MTA3ODYsImV4cCI6MTU4OTEyNDY1M30.VfscQvCeIpNu4_d5Cx9RGtX3vaQ9nXmroxGQ3YfqgTwYfQCDpIoMbiTMhjxIoMSkqnSRRqM81mjCK2Fl5ABpDw",
       onMessage: (BuildContext context, Map<String, dynamic> message) {
         // showing overlay
         return SafeArea(
