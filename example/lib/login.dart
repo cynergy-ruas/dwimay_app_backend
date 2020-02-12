@@ -69,13 +69,13 @@ class HomePage extends StatelessWidget {
               )
             );
           },
-          onLoaded: (BuildContext context, List<String> eventIDs) {
+          onLoaded: (BuildContext context, List<RegisteredEvent> eventIDs) {
             return ListView.builder(
               shrinkWrap: true,
               itemCount: eventIDs.length,
               itemBuilder: (BuildContext context, int index) {
                 return ListTile(
-                  title: Text(eventIDs[index]),
+                  title: Text(eventIDs[index].id),
                 );
               },
             );

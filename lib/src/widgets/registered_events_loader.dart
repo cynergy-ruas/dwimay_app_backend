@@ -1,7 +1,7 @@
 import 'package:dwimay_backend/src/blocs/registered_events/bloc.dart';
 import 'package:dwimay_backend/src/blocs/registered_events/states.dart';
 import 'package:dwimay_backend/src/blocs/registered_events/events.dart';
-import 'package:dwimay_backend/src/models/user_model.dart';
+import 'package:dwimay_backend/src/models/registered_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -15,7 +15,7 @@ class RegisteredEventsLoader extends StatefulWidget {
   final Widget onLoading;
 
   /// The function to execute when all the registered events are loaded
-  final Widget Function(BuildContext, List<String>) onLoaded;
+  final Widget Function(BuildContext, List<RegisteredEvent>) onLoaded;
 
   /// The function to execute when an error occurs
   final void Function(BuildContext, dynamic) onError;
@@ -68,13 +68,13 @@ class _RegisteredEventsLoaderState extends State<RegisteredEventsLoader> {
           if (state is RegEventsInit)
             _body = widget.initWidget ?? Container();
 
-          // checking if state is loading state
-          if (state is RegEventsLoading)
-            _body = widget.onLoading;
-
           // checking if state is loaded state
+          if (state is RegEventsLoaded)
+            _body = widget.onLoaded(context, state.regEvents);
+
+          // checking if state is loading state
           else
-            _body = widget.onLoaded(context, User.instance.regEventIDs);
+            _body = widget.onLoading;
 
           return AnimatedSwitcher(
             duration: Duration(milliseconds: 250),
