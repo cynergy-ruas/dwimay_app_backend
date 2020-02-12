@@ -26,7 +26,7 @@ class _EventLoadExampleState extends State<EventLoadExample> {
           onLoading: CircularProgressIndicator(),
 
           // widget to display when the events are loaded.
-          onLoaded: (List<Event> events) {
+          onLoaded: (List<Event> events, List<Pass> passes) {
             events = Event.getEventsOfDay(day: 3, events: events);
             print(events);
             return ListView.builder(

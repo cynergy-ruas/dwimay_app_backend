@@ -1,3 +1,5 @@
+import 'package:dwimay_backend/src/models/events_model.dart';
+import 'package:dwimay_backend/src/models/pass_model.dart';
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 
@@ -28,6 +30,13 @@ class DataLoadError extends DataLoadState {
 
 /// The state when data loading is complete
 class DataLoadComplete extends DataLoadState {
-  DataLoadComplete() : super();
+
+  /// The list of events
+  final List<Event> events;
+
+  /// The list of passes
+  final List<Pass> passes;
+
+  DataLoadComplete({@required this.events, this.passes}): super();
   String toString() => "DataLoadComplete";
 }

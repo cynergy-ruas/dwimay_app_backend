@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:dwimay_backend/src/models/events_model.dart';
+import 'package:dwimay_backend/src/models/pass_model.dart';
 import 'package:dwimay_backend/src/services/database.dart';
 import 'events.dart';
 import 'states.dart';
@@ -20,9 +21,13 @@ class EventLoadBloc extends Bloc<DataLoadEvent, DataLoadState>{
 
       // loading data
       try {
-        await this._loadEvents();
+        List<dynamic> res = await Future.wait([this._loadEvents(), this._loadPasses()]);
+
         // yielding data load complete state
-        yield DataLoadComplete();
+        yield DataLoadComplete(
+          events: List<Event>.from(res[0]),
+          passes: List<Pass>.from(res[1])
+        );
       } 
       catch (e) {
         yield DataLoadError(exception: e);
@@ -45,7 +50,9 @@ class EventLoadBloc extends Bloc<DataLoadEvent, DataLoadState>{
           registrationLink: event.registrationLink
         );
 
-        yield DataLoadComplete();
+        yield DataLoadComplete(
+          events: EventPool.events
+        );
       }
       catch (e) {
         yield DataLoadError(exception: e);
@@ -54,7 +61,11 @@ class EventLoadBloc extends Bloc<DataLoadEvent, DataLoadState>{
     }
   }
 
-  Future<void> _loadEvents() async {
+  /// Loads the passes
+  Future<List<Pass>> _loadPasses() async =>
+    await (await Database.instance).getPasses();
+
+  Future<List<Event>> _loadEvents() async {
     // getting instance of database
     Database db = await Database.instance;
 
@@ -96,6 +107,8 @@ class EventLoadBloc extends Bloc<DataLoadEvent, DataLoadState>{
         documentID: data[i]["docRef"]
       ));
     }
+
+    return EventPool.events;
   }
 
   /// Updates an event referenced by [documentID] with the values given as arguments.

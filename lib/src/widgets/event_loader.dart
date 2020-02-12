@@ -2,6 +2,7 @@ import 'package:dwimay_backend/src/blocs/event/bloc.dart';
 import 'package:dwimay_backend/src/blocs/event/events.dart';
 import 'package:dwimay_backend/src/blocs/event/states.dart';
 import 'package:dwimay_backend/src/models/events_model.dart';
+import 'package:dwimay_backend/src/models/pass_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -20,7 +21,7 @@ class EventLoader extends StatefulWidget {
   /// the data is loaded. The [List<Event>] provided as an 
   /// argument is empty if the client (phone) is not 
   /// connected to the internet.
-  final Widget Function(List<Event>) onLoaded;
+  final Widget Function(List<Event>, List<Pass>) onLoaded;
 
   /// Specifies whether to begin loading the data
   /// immediately. If false (default is false), the 
@@ -50,7 +51,7 @@ class EventLoaderState extends State<EventLoader> {
   bool get beginLoad => widget.beginLoad;
   Widget get onUninitialized => widget.onUninitialized;
   Widget get onLoading => widget.onLoading;
-  Widget Function(List<Event>) get onLoaded => widget.onLoaded;
+  Widget Function(List<Event>, List<Pass>) get onLoaded => widget.onLoaded;
   void Function(BuildContext, dynamic) get onError => widget.onError;
 
   /// The bloc. Used if [widget.bloc] is null
@@ -93,12 +94,12 @@ class EventLoaderState extends State<EventLoader> {
             child = onUninitialized ?? Container();
           
           // if the data is loading,
-          if (state is DataLoadOnGoing)
-            child = onLoading;
+          if (state is DataLoadComplete)
+            child = onLoaded(state.events, state.passes);
 
           // if the data is loaded,
           else
-            child = onLoaded(EventPool.events);
+            child = onLoading;
 
           return AnimatedSwitcher(
             duration: Duration(milliseconds: 250),
