@@ -34,6 +34,7 @@ class RegisteredEventsBloc extends Bloc<RegEventsEvent, RegEventsState> {
           (String id, dynamic data) {
             Map<String, dynamic> info = Map<String, dynamic>.from(data);
             regEvents.add(RegisteredEvent(id: id, eventNames: List<String>.from(info["events"]), isPass: true, registrationId: info["id"].toString()));
+            User.instance.regEventIDs.add(id);
           }
         );
         

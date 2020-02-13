@@ -70,6 +70,7 @@ class HomePage extends StatelessWidget {
             );
           },
           onLoaded: (BuildContext context, List<RegisteredEvent> eventIDs) {
+            print(User.instance.regEventIDs);
             return ListView.builder(
               shrinkWrap: true,
               itemCount: eventIDs.length,
