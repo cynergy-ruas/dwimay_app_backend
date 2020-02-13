@@ -26,8 +26,12 @@ class AttendeeInfo {
   }
 
   /// Gets all the answers of all the questions separated by [separator]
-  String getAllAnswers({String separator = ","}) =>
-    answerList.map((qa) => qa.answer).toList().join(separator);
+  List<String> getAllAnswers() =>
+    answerList.map((qa) => qa.answer)
+    .map((str) => str.split(","))
+    .expand((i) => i)
+    .toList();
+    
 
   @override
   String toString() =>
