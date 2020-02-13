@@ -176,6 +176,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       // unsubscribing user to events based on clearance levels
       _subscribeOrUnsubscribeFromEvents(notificationBloc.unsubscribe);
 
+      User.instance.isLoggedIn = false;
+
       // yield [AuthInvalid] state
       yield AuthInvalid();
     }
