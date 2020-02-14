@@ -27,7 +27,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   /// the app to show the appropriate UI.
   Stream<NotificationState> mapEventToState(NotificationEvent event) async* {
 
-    if (event is NotificationReceived) {
+    if (event is NotificationReceivedForeground) {
       // yeilding event to show the appropriate UI
       yield ShowNotificationUI(message: event.message);
 
@@ -40,6 +40,20 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
       listeners.forEach((listener) => listener(event.message));
 
       yield initialState;
+    }
+
+    /// when the notification is received when the app is closed or in background
+    else if (event is NotificationReceivedBackground) {
+      // adding notification messages to pool
+      // such messages are announcements
+      if (event.message.containsKey("notification"))
+        this.addToPool(payload: {
+          "notification": {
+            "title": event.message["data"]["title"],
+            "body": event.message["data"]["body"],
+          },
+          "data": event.message["data"]..removeWhere((dynamic key, dynamic value) => key == "title" || key == "body")
+        });
     }
   }
 

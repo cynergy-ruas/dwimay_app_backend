@@ -11,12 +11,24 @@ class NotificationInit extends NotificationEvent {
   String toString() => "Notification Init";
 }
 
-/// The event emitted when a notification is received
-class NotificationReceived extends NotificationEvent { 
+/// The event emitted when a notification is received when the app is in
+/// foreground
+class NotificationReceivedForeground extends NotificationEvent { 
   final Map<String, dynamic> message;
 
-  NotificationReceived({@required this.message});
+  NotificationReceivedForeground({@required this.message});
 
   @override
-  String toString() => "Notification Received";
+  String toString() => "Notification Received Foreground";
+}
+
+/// The event emitted when a notification is received when the app is in 
+/// background or closed
+class NotificationReceivedBackground extends NotificationEvent {
+  final Map<String, dynamic> message;
+
+  NotificationReceivedBackground({@required this.message});
+
+  @override
+  String toString() => "Notification Recevied Background";
 }

@@ -16,8 +16,8 @@ class Announcement {
   Announcement({@required this.title, @required this.body, @required this.data});
 
   Announcement.fromMap({@required Map<String, dynamic> map}) {
-    this.title = map['notification']['title'];
-    this.body = map['notification']['body'];
+    this.title = map['notification']['title'].toString();
+    this.body = map['notification']['body'].toString();
     this.data = Map<String, dynamic>.from(map['data']);
   }
 
@@ -31,6 +31,9 @@ class Announcement {
     },
     "data": this.data,
   };
+
+  String toString() =>
+    "Announcement[title: ${this.title}, body: ${this.body}]";
 }
 
 /// Contains all the announcements

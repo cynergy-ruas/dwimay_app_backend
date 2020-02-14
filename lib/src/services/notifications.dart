@@ -35,9 +35,15 @@ class FirebaseNotificationSettings {
                   @required NotificationBloc bloc}) {
 
     _messaging.configure(
-      onMessage: (Map<String, dynamic> message) async => bloc.add(NotificationReceived(message: message)),
-      onResume: (Map<String, dynamic> message) async => onResume(message: message),
-      onLaunch: (Map<String, dynamic> message) async => onLaunch(message: message),
+      onMessage: (Map<String, dynamic> message) async => bloc.add(NotificationReceivedForeground(message: message)),
+      onResume: (Map<String, dynamic> message) async { 
+        bloc.add(NotificationReceivedBackground(message: message));
+        onResume(message: message);
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        bloc.add(NotificationReceivedBackground(message: message));
+        onLaunch(message: message);
+      }
     );
   }
 
