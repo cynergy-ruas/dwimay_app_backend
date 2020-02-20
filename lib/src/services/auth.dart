@@ -34,7 +34,10 @@ class LoginAuth {
       _currentUser = (await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password)).user;
     }
     else {
-      throw AuthenticationError("user has not paid for an event.");
+      throw AuthenticationError(
+        type: "USER_NOT_PAID",
+        message: "user has not paid for an event.",
+      );
     }
   }
 
@@ -89,7 +92,8 @@ class LoginAuth {
 
 /// class that represents an authentication error
 class AuthenticationError implements Exception {
+  final String type;
   final String message;
 
-  AuthenticationError([this.message]);
+  AuthenticationError({@required this.type, this.message});
 }
