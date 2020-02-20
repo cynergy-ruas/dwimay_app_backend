@@ -35,7 +35,7 @@ class EventLoadBloc extends Bloc<DataLoadEvent, DataLoadState>{
       }
     }
 
-    if (event is UpdateData) {
+    else if (event is UpdateData) {
 
       try {
         await this._updateEvent(
@@ -100,6 +100,7 @@ class EventLoadBloc extends Bloc<DataLoadEvent, DataLoadState>{
         description: data[i]["description"],
         id: data[i]["id"],
         name: data[i]["name"],
+        poc: Map<String, String>.from(data[i]["poc"]),
         speaker: data[i]["speaker"],
         type: data[i]["type"],
         venue: data[i]["venue"],

@@ -20,6 +20,9 @@ class Event {
   /// The name of the event.
   String name;
 
+  /// The contact information of the POC of the event
+  Map<String, String> poc;
+
   /// The speaker of the event.
   String speaker;
 
@@ -42,6 +45,7 @@ class Event {
     @required this.description,
     @required this.id,
     @required this.name,
+    @required this.poc,
     @required this.speaker,
     @required this.type,
     @required this.venue,
@@ -114,6 +118,12 @@ class Event {
 
     return res;
   }
+
+  /// Gets the name of the poc
+  String getPocName() => poc["name"];
+
+  /// Gets the phone number of the poc
+  String getPocNumber() => poc["number"];
 }
 
 /// Contains all the events.

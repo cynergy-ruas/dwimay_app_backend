@@ -63,7 +63,6 @@ class EventLoaderState extends State<EventLoader> {
 
     // initializing the event load bloc
     _bloc = (widget.bloc != null) ? widget.bloc : EventLoadBloc();
-
     if (beginLoad)
       _bloc.add(BeginDataLoad());
   }
@@ -89,12 +88,15 @@ class EventLoaderState extends State<EventLoader> {
           // the widget to show
           Widget child;
 
+          print(state);
+
           // if the data load is not started,
-          if (state is DataLoadUnintialized)
+          if (state is DataLoadUnintialized) {
             child = onUninitialized ?? Container();
+          }
           
           // if the data is loading,
-          if (state is DataLoadComplete)
+          else if (state is DataLoadComplete)
             child = onLoaded(state.events, state.passes);
 
           // if the data is loaded,
@@ -115,7 +117,7 @@ class EventLoaderState extends State<EventLoader> {
     super.dispose();
 
     // disposing bloc if the bloc was created here
-    if (widget.bloc == null)
+    if (widget.bloc == null) 
       _bloc.close();
   }
 }
