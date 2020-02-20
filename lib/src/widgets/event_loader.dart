@@ -88,8 +88,6 @@ class EventLoaderState extends State<EventLoader> {
           // the widget to show
           Widget child;
 
-          print(state);
-
           // if the data load is not started,
           if (state is DataLoadUnintialized) {
             child = onUninitialized ?? Container();
