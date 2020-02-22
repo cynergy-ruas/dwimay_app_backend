@@ -44,6 +44,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
 
     /// when the notification is received when the app is closed or in background
     else if (event is NotificationReceivedBackground) {
+      print(event.message);
       // adding notification messages to pool
       // such messages are announcements
       if (event.message.containsKey("notification") || event.message.containsKey("aps"))

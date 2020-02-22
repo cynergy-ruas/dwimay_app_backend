@@ -24,9 +24,18 @@ class Announcement {
       this.data = Map<String, dynamic>.from(map["data"])..removeWhere((String key, dynamic value) => key == "title" || key == "body");
     }
     else {
-      this.title = map['notification']['title'].toString();
-      this.body = map['notification']['body'].toString();
-      this.data = Map<String, dynamic>.from(map['data']);
+      // notifications key is null when a notification is received when the app
+      // is in background or closed on android
+      if (map['notifications'] == null) {
+        this.title = map["data"]["title"];
+        this.body = map["data"]["body"];
+        this.data = Map<String, dynamic>.from(map["data"])..removeWhere((String key, dynamic value) => key == "title" || key == "body");
+      }
+      else {
+        this.title = map['notification']['title'].toString();
+        this.body = map['notification']['body'].toString();
+        this.data = Map<String, dynamic>.from(map['data']);
+      }
     }
   }
 
