@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 
@@ -16,9 +18,22 @@ class Announcement {
   Announcement({@required this.title, @required this.body, @required this.data});
 
   Announcement.fromMap({@required Map<String, dynamic> map}) {
-    this.title = map['notification']['title'].toString();
-    this.body = map['notification']['body'].toString();
-    this.data = Map<String, dynamic>.from(map['data']);
+    if (Platform.isIOS) {
+      this.title = map["data"]["title"].toString();
+      this.body = map["data"]["body"].toString();
+      this.data = Map<String, dynamic>.from(map["data"])..removeWhere((String key, dynamic value) => key == "title" || key == "body");
+    }
+    else {
+      this.title = map['notification']['title'].toString();
+      this.body = map['notification']['body'].toString();
+      this.data = Map<String, dynamic>.from(map['data']);
+    }
+  }
+
+  Announcement.fromStorage({@required Map<String, dynamic> map}) {
+    this.title = map["notification"]["title"].toString();
+    this.body = map["notification"]["body"].toString();
+    this.data = Map<String, dynamic>.from(map["data"]);
   }
 
   Announcement.fromRaw({@required this.title, @required this.body, this.data});

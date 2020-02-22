@@ -32,25 +32,25 @@ class _NotificationsExampleState extends State<NotificationsExample> {
           Text("Home"),
 
           // gap
-          SizedBox(height: 40),
+          SizedBox(height: 10),
           
           // button to subscribe to notifications of event
           SubscribeButton(),
 
           // gap
-          SizedBox(height: 40,),
+          SizedBox(height: 10,),
 
           // button to unsubscribe to notifications of event
           UnsubscribeButton(),
 
           // gap
-          SizedBox(height: 40,),
+          SizedBox(height: 10,),
 
           // button to clear announcements
           DeleteButton(),
 
           // gap
-          SizedBox(height: 40,),
+          SizedBox(height: 10,),
           
           // title
           Text("announcements:"),
