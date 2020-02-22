@@ -19,9 +19,16 @@ class Announcement {
 
   Announcement.fromMap({@required Map<String, dynamic> map}) {
     if (Platform.isIOS) {
-      this.title = map["data"]["title"].toString();
-      this.body = map["data"]["body"].toString();
-      this.data = Map<String, dynamic>.from(map["data"])..removeWhere((String key, dynamic value) => key == "title" || key == "body");
+      if (map["data"] != null) {
+        this.title = map["data"]["title"].toString();
+        this.body = map["data"]["body"].toString();
+        this.data = Map<String, dynamic>.from(map["data"])..removeWhere((String key, dynamic value) => key == "title" || key == "body");
+      }
+      else {
+        this.title = map["notification"]["title"].toString();
+        this.body = map["notification"]["body"].toString();
+        this.data = map..removeWhere((String key, dynamic value) => key == "notification" || key == "title" || key == "body");
+      }
     }
     else {
       // notifications key is null when a notification is received when the app

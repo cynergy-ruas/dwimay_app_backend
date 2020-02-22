@@ -1,3 +1,4 @@
+import 'package:dwimay_backend/src/models/announcement_model.dart';
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 
@@ -15,9 +16,9 @@ class NotificationUninitialized extends NotificationState {
 /// The state to transit to when a notification occurs.
 /// This state signals that an appropriate UI should be shown.
 class ShowNotificationUI extends NotificationState {
-  final Map<String, dynamic> message;
+  final Announcement announcement;
 
-  ShowNotificationUI({@required this.message});
+  ShowNotificationUI({@required this.announcement});
 
   @override
   String toString() => "Showing notification UI";

@@ -28,13 +28,15 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   Stream<NotificationState> mapEventToState(NotificationEvent event) async* {
 
     if (event is NotificationReceivedForeground) {
-      // yeilding event to show the appropriate UI
-      yield ShowNotificationUI(message: event.message);
-
+      print(event.message);
       // adding notification messages to pool
       // such messages are announcements
-      if (event.message.containsKey("notification") || event.message.containsKey("aps"))
-        this.addToPool(payload: event.message);
+      if (event.message.containsKey("notification") || event.message.containsKey("aps")) {
+        Announcement a = this.addToPool(payload: event.message);
+
+        // yielding event to show the appropriate UI
+        yield ShowNotificationUI(announcement: a);
+      }
       
       // notifying listeners
       listeners.forEach((listener) => listener(event.message));
@@ -88,7 +90,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   }
 
   /// Adds an announcement to the [AnnouncementPool] and the local storage.
-  Future<void> addToPool({@required Map<String, dynamic> payload}) {
+  Announcement addToPool({@required Map<String, dynamic> payload}) {
     // creating an [Announcement] object
     Announcement a = Announcement.fromMap(map: payload);
 
@@ -96,11 +98,13 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     AnnouncementPool.instance.add(announcement: a);
 
     // updating local storage
-    return FileProvider.instance.then((instance) => 
+    FileProvider.instance.then((instance) => 
       instance.dumpAnnouncments(
         data: AnnouncementPool.instance.raws
       )
     );
+
+    return a;
   }
 
   /// Removes announcement from [AnnouncementPool] and updates local storage.

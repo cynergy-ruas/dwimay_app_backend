@@ -11,7 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class NotificationListener extends StatefulWidget {
 
   /// Builder function that builds the UI when a notification arrives
-  final Widget Function(BuildContext, Map<String, dynamic>) onMessage;
+  final Widget Function(BuildContext, Announcement) onMessage;
 
   /// Callback to execute when a notification arrives when the application
   /// is in background. If not given, resumes the app by default.
@@ -68,7 +68,7 @@ class _NotificationListenerState extends State<NotificationListener> {
             Dismissible(
               key: UniqueKey(),
               direction: DismissDirection.up,
-              child: widget.onMessage(context, state.message),
+              child: widget.onMessage(context, state.announcement),
               onDismissed: (DismissDirection direction) => 
                 OverlaySupportEntry.of(context).dismiss(animate: false),
             )
