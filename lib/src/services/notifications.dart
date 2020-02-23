@@ -41,7 +41,7 @@ class FirebaseNotificationSettings {
         onResume(message: message);
       },
       onLaunch: (Map<String, dynamic> message) async {
-        bloc.add(NotificationReceivedBackground(message: message));
+        bloc.add(NotificationReceivedClosed(message: message));
         onLaunch(message: message);
       }
     );

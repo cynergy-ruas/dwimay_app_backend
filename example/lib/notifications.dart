@@ -80,10 +80,10 @@ class _NotificationsExampleState extends State<NotificationsExample> {
                       ),
                       child: ListTile(
                         title: Text(announcements[index].title),
-                        subtitle: Text(announcements[index].body),
+                        subtitle: Text(announcements[index].id.toString()),
                       ),
                       onDismissed: (DismissDirection direction) =>
-                        BackendProvider.of<NotificationBloc>(context).removeFromPool(index: index),
+                        BackendProvider.of<NotificationBloc>(context).removeFromPool(announcement: announcements[index]),
                     );
                   },
                 );

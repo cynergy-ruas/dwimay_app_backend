@@ -44,7 +44,7 @@ class FileProvider {
   static Future<FileProvider> get instance async {
     if (_instance == null) {
       _instance = FileProvider._();
-      _appDirectory = await getApplicationDocumentsDirectory();
+      _appDirectory = await getApplicationSupportDirectory();
     }
     
     return _instance;

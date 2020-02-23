@@ -22,8 +22,12 @@ class AnnouncementsBuilderState extends State<AnnouncementsBuilder> {
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
       valueListenable: AnnouncementPool.instance.listenable,
-      builder: (BuildContext context, List<Announcement> announcement, _) => 
-        widget.builder(context, announcement),
+      builder: (BuildContext context, Map<String, Announcement> announcements, _) {
+        List<Announcement> aList = announcements.values.toList()..sort(
+          (Announcement a, Announcement b) => b.id.compareTo(a.id)
+        );
+        return widget.builder(context, aList);
+      }
     );
   }
 }

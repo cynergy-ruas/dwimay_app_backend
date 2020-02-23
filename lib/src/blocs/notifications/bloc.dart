@@ -28,7 +28,6 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   Stream<NotificationState> mapEventToState(NotificationEvent event) async* {
 
     if (event is NotificationReceivedForeground) {
-      print(event.message);
       // adding notification messages to pool
       // such messages are announcements
       if (event.message.containsKey("notification") || event.message.containsKey("aps")) {
@@ -44,14 +43,25 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
       yield initialState;
     }
 
-    /// when the notification is received when the app is closed or in background
+    /// when the notification is received when the app is in background
     else if (event is NotificationReceivedBackground) {
-      print(event.message);
       // adding notification messages to pool
       // such messages are announcements
       if (event.message.containsKey("notification") || event.message.containsKey("aps"))
         this.addToPool(payload: event.message);
     }
+
+    /// when the notification is received when the app is closed
+    else if (event is NotificationReceivedClosed) {
+      // loading the announcements from storage
+      await loadAnnouncementsFromStorage();
+
+      // adding notification messages to pool
+      // such messages are announcements
+      if (event.message.containsKey("notification") || event.message.containsKey("aps"))
+        this.addToPool(payload: event.message);
+    }
+    
   }
 
   // Operations related to [FirebaseNotificationSettings]
@@ -90,7 +100,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   }
 
   /// Adds an announcement to the [AnnouncementPool] and the local storage.
-  Announcement addToPool({@required Map<String, dynamic> payload}) {
+  Announcement addToPool({@required Map<String, dynamic> payload}) {  
     // creating an [Announcement] object
     Announcement a = Announcement.fromMap(map: payload);
 
@@ -98,20 +108,21 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     AnnouncementPool.instance.add(announcement: a);
 
     // updating local storage
-    FileProvider.instance.then((instance) => 
-      instance.dumpAnnouncments(
-        data: AnnouncementPool.instance.raws
-      )
+    FileProvider.instance.then((instance) {
+        instance.dumpAnnouncments(
+          data: AnnouncementPool.instance.raws
+        );
+      }
     );
 
     return a;
   }
 
   /// Removes announcement from [AnnouncementPool] and updates local storage.
-  Future<void> removeFromPool({@required int index}) {
+  Future<void> removeFromPool({@required Announcement announcement}) {
 
     // removing from [AnnouncementPool]
-    AnnouncementPool.instance.remove(index: index);
+    AnnouncementPool.instance.remove(announcement: announcement);
 
     // updating local storage
     return FileProvider.instance.then((instance) => 

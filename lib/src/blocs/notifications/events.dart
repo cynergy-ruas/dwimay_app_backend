@@ -23,12 +23,23 @@ class NotificationReceivedForeground extends NotificationEvent {
 }
 
 /// The event emitted when a notification is received when the app is in 
-/// background or closed
+/// background
 class NotificationReceivedBackground extends NotificationEvent {
   final Map<String, dynamic> message;
 
   NotificationReceivedBackground({@required this.message});
 
   @override
-  String toString() => "Notification Recevied Background";
+  String toString() => "Notification Received Background";
+}
+
+/// The event emitted when a notification is received when the app is 
+/// closed
+class NotificationReceivedClosed extends NotificationEvent {
+  final Map<String, dynamic> message;
+
+  NotificationReceivedClosed({@required this.message});
+
+  @override
+  String toString() => "Notification Received Closed";
 }

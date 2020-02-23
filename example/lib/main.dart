@@ -9,6 +9,7 @@ import 'package:bloc/bloc.dart';
 
 void main() {
   BlocSupervisor.delegate = SimpleBlocDelegate();
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
 
