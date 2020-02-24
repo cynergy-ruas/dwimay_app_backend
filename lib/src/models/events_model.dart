@@ -165,7 +165,7 @@ extension DepartmentExtras on Department {
   static const data = {
     Department.AerospaceAndAutomotive: {
       "id": "ASE",
-      "name": "Aeronautical and Automotive",
+      "name": "Aerospace and Automotive",
     },
 
     Department.All: {
