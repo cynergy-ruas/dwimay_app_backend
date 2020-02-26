@@ -91,7 +91,7 @@ class EventLoadBloc extends Bloc<DataLoadEvent, DataLoadState>{
       // to get the start day of the fest
       datetimes.forEach((date) {
         if (Event.festFirstDay == null || Event.festFirstDay.isAfter(date))
-          Event.festFirstDay = date;
+          Event.festFirstDay = DateTime(date.year, date.month, date.day);
       });
 
       EventPool.addEvent(Event(
